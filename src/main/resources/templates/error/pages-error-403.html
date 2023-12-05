@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ERROR 403</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}" />
+    <link rel="stylesheet" th:href="@{/assets/css/backend-plugin.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/backend.css}">
+    <link rel="stylesheet" th:href="@{/assets/vendor/fortawesome/fontawesome-free/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/vendor/remixicon/fonts/remixicon.css}">
+
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Raleway:700);
+
+        *, *:before, *:after {
+            box-sizing: border-box;
+        }
+        html {
+            height: 100%;
+        }
+        body {
+            font-family: 'Raleway', sans-serif;
+            background-color: #342643;
+            height: 100%;
+            padding: 10px;
+        }
+
+        a {
+            color: #EE4B5E !important;
+            text-decoration:none;
+        }
+        a:hover {
+            color: #FFFFFF !important;
+            text-decoration:none;
+        }
+
+        .text-wrapper {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .title {
+            font-size: 5em;
+            font-weight: 700;
+            color: #EE4B5E;
+        }
+
+        .subtitle {
+            font-size: 40px;
+            font-weight: 700;
+            color: #1FA9D6;
+        }
+        .isi {
+            font-size: 18px;
+            text-align: center;
+            margin:30px;
+            padding:20px;
+            color: white;
+        }
+        .buttons {
+            margin: 30px;
+            font-weight: 700;
+            border: 2px solid #EE4B5E;
+            text-decoration: none;
+            padding: 15px;
+            text-transform: uppercase;
+            color: #EE4B5E;
+            border-radius: 26px;
+            transition: all 0.2s ease-in-out;
+            display: inline-block;
+
+            .buttons:hover {
+                background-color: #EE4B5E;
+                color: white;
+                transition: all 0.2s ease-in-out;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- loader Start -->
+<div id="loading">
+    <div id="loading-center">
+    </div>
+</div>
+<!-- loader END -->
+<div class="text-wrapper">
+    <div class="title" data-content="404">
+        403 - ACCESS DENIED
+    </div>
+    <br></br>
+    <div class="subtitle">
+        Oops, You don't have permission to access this page.
+    </div>
+    <div class="isi">
+        A web server may return a 403 Forbidden HTTP status code in response to a request from a client for a web page or resource to indicate that the server can be reached and understood the request, but refuses to take any further action. Status code 403 responses are the result of the web server being configured to deny access, for some reason, to the requested resource by the client.
+    </div>
+
+    <div class="buttons">
+        <a class="button" href="/">Go to homepage</a>
+    </div>
+
+    <!-- Backend Bundle JavaScript -->
+    <script th:src="@{/assets/js/backend-bundle.min.js}"></script>
+
+    <!-- Table Treeview JavaScript -->
+    <script th:src="@{/assets/js/table-treeview.js}"></script>
+
+    <!-- Chart Custom JavaScript -->
+    <script th:src="@{/assets/js/customizer.js}"></script>
+
+    <!-- Chart Custom JavaScript -->
+    <script async th:src="@{/assets/js/chart-custom.js}"></script>
+
+    <!-- app JavaScript -->
+    <script th:src="@{/assets/js/app.js}"></script>
+</div>
+</body>
+</html>

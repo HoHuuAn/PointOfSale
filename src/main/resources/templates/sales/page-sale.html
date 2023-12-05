@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <title>Point of Sale</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}" />
+    <link rel="stylesheet" th:href="@{/assets/css/backend-plugin.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/backend.css}">
+    <link rel="stylesheet" th:href="@{/assets/vendor/fortawesome/fontawesome-free/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/vendor/remixicon/fonts/remixicon.css}">
+
+    <style>
+        .image {
+            position: absolute;
+            bottom: auto;
+            left: -9px;
+            top: -9px;
+            border-radius: 50%;
+            height: 35px;
+            width: 35px;
+            text-align: center;
+            font-size: 20px;
+            line-height: 24px;
+            cursor: pointer;
+            border: 5px solid #fff;
+            background-color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+<!-- loader Start -->
+<div id="loading">
+    <div id="loading-center">
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+<!--        <div class="col-lg-12">-->
+<!--            <div class="card">-->
+<!--                <div class="card-header d-flex justify-content-between">-->
+<!--                    <div class="card-body p-0">-->
+<!--                        <div class="iq-edit-list usr-edit">-->
+<!--                            <ul class="iq-edit-profile d-flex nav nav-pills">-->
+<!--                                <li class="col-md-4 p-0">-->
+<!--                                    <a class="nav-link active" data-toggle="pill" href="#sales">-->
+<!--                                        Sales-->
+<!--                                    </a>-->
+<!--                                </li>-->
+<!--                                <li class="col-md-4 p-0">-->
+<!--                                    <a class="nav-link" data-toggle="pill" href="#customer-information">-->
+<!--                                        Customer Information-->
+<!--                                    </a>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+        <div class="col-lg-12">
+            <div class="iq-edit-list-data">
+                <div class="tab-content">
+                    <div class="tab-pane fade active show" id="sales" role="tabpanel">
+                        <div class="row">
+                            <div class="card col-12 col-md-7">
+                                <div class="card-header d-flex justify-content-between">
+                                    <div class="card-body p-0">
+                                        <h4><strong>Products</strong></h4>
+                                    </div>
+                                    <div class="iq-search-bar device-search">
+                                        <form class="searchbox" >
+                                            <a class="search-link" href="#"><i class="ri-search-line"></i></a>
+                                            <input type="text" class="text search-input"
+                                                   placeholder="Search here..." id="search-product">
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div th:each="product:${listProducts}" class="col-sm-6 col-md-6 col-lg-3">
+                                            <div class="card">
+                                                <img th:src="@{'data:image/png;base64,' + ${product.getImage()}}" class="card-img-top"
+                                                     alt="#">
+                                                <div class="card-body">
+                                                    <h4 class="card-title" th:text="${product.getName()}"></h4>
+                                                    <p class="card-text" th:utext="${'Price: ' + product.getRetailPrice() + '<br>Code: ' + product.getBarCode()}"></p>
+                                                    <div th:if="${product.getQuantityOfBranch()  > 0 }">
+                                                        <a href="#" class="btn btn-primary" th:attr="onclick='addProduct(\'' + ${product.getBarCode()} + '\')'">Add</a>
+                                                    </div>
+                                                    <div th:if="${product.getQuantityOfBranch()  == 0 }">
+                                                        <button disabled class="btn btn-light">Sold out</button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- ======================================== Customer and Order ======================================== -->
+                            <div class="col-6 col-md-5  blur-shadow shadow-showcase">
+                                <!-- ======================================== Customer ======================================== -->
+<!--                                <div class="card">-->
+<!--                                    <div class="card-header d-flex justify-content-between">-->
+<!--                                        <div class="header-title">-->
+<!--                                            <h4 class="card-title">Customer Details</h4>-->
+<!--                                        </div>-->
+<!--                                        <button type="button" class="btn btn-primary mt-2" data-toggle="modal"-->
+<!--                                                data-target="#enterCustomerModal">-->
+<!--                                            +-->
+<!--                                        </button>-->
+
+<!--                                        &lt;!&ndash; Model enter Customer &ndash;&gt;-->
+<!--                                        <div class="modal fade" id="enterCustomerModal" tabindex="-1" role="dialog"-->
+<!--                                             aria-labelledby="enterCustomerTitle" aria-hidden="true">-->
+<!--                                            <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--                                                <div class="modal-content">-->
+<!--                                                    <div class="modal-header">-->
+<!--                                                        <h5 class="modal-title" id="enterCustomerTitle">Customer-->
+<!--                                                        </h5>-->
+<!--                                                        <button type="button" class="close" data-dismiss="modal"-->
+<!--                                                                aria-label="Close">-->
+<!--                                                            <span aria-hidden="true">&times;</span>-->
+<!--                                                        </button>-->
+<!--                                                    </div>-->
+<!--                                                    <div class="modal-body">-->
+<!--                                                        <form class="form-horizontal"  data-toggle="validator">-->
+<!--                                                            <div class="form-group row">-->
+<!--                                                                <label-->
+<!--                                                                        class="control-label col-sm-3 align-self-center"-->
+<!--                                                                        for="phone">Phone:</label>-->
+<!--                                                                <div class="col-sm-9">-->
+<!--                                                                    <input type="text" class="form-control"-->
+<!--                                                                           id="phoneInput" name="phone"-->
+<!--                                                                           placeholder="Enter Customer's Phone">-->
+<!--                                                                </div>-->
+<!--                                                            </div>-->
+<!--                                                            <div class="form-group row">-->
+<!--                                                                <label-->
+<!--                                                                        class="control-label col-sm-3 align-self-center"-->
+<!--                                                                        for="name">Name:</label>-->
+<!--                                                                <div class="col-sm-9">-->
+<!--                                                                    <input type="text" class="form-control"-->
+<!--                                                                           id="nameInput" name="name"-->
+<!--                                                                           placeholder="Enter  Customer's Name">-->
+<!--                                                                </div>-->
+<!--                                                            </div>-->
+<!--                                                            <div class="form-group row">-->
+<!--                                                                <label-->
+<!--                                                                        class="control-label col-sm-3 align-self-center"-->
+<!--                                                                        for="address">Address:</label>-->
+<!--                                                                <div class="col-sm-9">-->
+<!--                                                                    <input type="text" class="form-control"-->
+<!--                                                                           id="addressInput" name="address"-->
+<!--                                                                           placeholder="Enter  Customer's Address">-->
+<!--                                                                </div>-->
+<!--                                                            </div>-->
+<!--                                                        </form>-->
+<!--                                                    </div>-->
+<!--                                                    <div class="modal-footer">-->
+<!--                                                        <button type="button" class="btn btn-secondary"-->
+<!--                                                                data-dismiss="modal">Close</button>-->
+<!--                                                        <button type="reset"-->
+<!--                                                                class="btn btn-danger btn-enter-customer"-->
+<!--                                                                id="btn-reset-customer">Reset</button>-->
+<!--                                                        <button type="submit"-->
+<!--                                                                class="btn btn-primary btn-enter-customer"-->
+<!--                                                                id="btn-enter-customer">Add</button>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="card-body">-->
+<!--                                        <form class="form-horizontal" action="">-->
+<!--                                            <div class="form-group row">-->
+<!--                                                <label class="control-label col-sm-3 align-self-center"-->
+<!--                                                       for="phone">Phone:</label>-->
+<!--                                                <div class="col-sm-9">-->
+<!--                                                    <input type="text" class="form-control phone-display" id="phone-display"-->
+<!--                                                           value="Customer's Phone" disabled>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                            <div class="form-group row">-->
+<!--                                                <label class="control-label col-sm-3 align-self-center"-->
+<!--                                                       for="name">Name:</label>-->
+<!--                                                <div class="col-sm-9">-->
+<!--                                                    <input type="text" class="form-control name-display" id="name-display"-->
+<!--                                                           value="Customer's Name" disabled>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                            <div class="form-group row">-->
+<!--                                                <label class="control-label col-sm-3 align-self-center"-->
+<!--                                                       for="address">Address:</label>-->
+<!--                                                <div class="col-sm-9">-->
+<!--                                                    <input type="text" class="form-control address-display" id="address-display"-->
+<!--                                                           value="Customer's Address" disabled>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </form>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+                                <!-- ======================================== Order======================================== -->
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-between">
+                                        <div class="header-title">
+                                            <h4 class="card-title">Order Details</h4>
+                                        </div>
+                                        <button type="button" class="btn btn-primary mt-2" id="reset-order" onclick="resetOrder()">
+                                            Reset
+                                        </button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead class="">
+                                                <tr class="bg-success">
+                                                    <th>Product</th>
+                                                    <th>Quantity</th>
+                                                    <th>Subtotal</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="table-body-orders-cart">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-4"></div>
+                                            <div class="col-sm-4">
+                                                <h4><strong>Cash</strong></h4>
+                                            </div>
+                                            <div class="col-sm-4 text-right">
+                                                <h4 id="order-detail-cash"><strong>0</strong></h4>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="button" id="checkout"
+                                                    class="btn btn-primary btn-block">CheckOut</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- view Customer -->
+<!--                    <div class="tab-pane fade " id="customer-information" role="tabpanel">-->
+<!--                        <div class="row">-->
+<!--                            <div class="card col-sm-3">-->
+<!--                                <div class="card-header d-flex justify-content-between">-->
+<!--                                    <div class="iq-header-title">-->
+<!--                                        <h4 class="card-title">Customer Information</h4>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="card-body">-->
+<!--                                    <form>-->
+<!--                                        <div class=" row align-items-center">-->
+<!--                                            <div class="form-group col-sm-12">-->
+<!--                                                <label for="name">FullName:</label>-->
+<!--                                                <input readonly type="text" class="form-control name-display" id="name">-->
+<!--                                            </div>-->
+<!--                                            <div class="form-group col-sm-12">-->
+<!--                                                <label for="phone">Phone:</label>-->
+<!--                                                <input readonly type="text" class="form-control phone-display" id="phone">-->
+<!--                                            </div>-->
+<!--                                            <div class="form-group col-sm-12">-->
+<!--                                                <label for="address">Address:</label>-->
+<!--                                                <input readonly type="text" class="form-control address-display" id="address">-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </form>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="card col-sm-9">-->
+<!--                                <div class="card-header d-flex justify-content-between">-->
+<!--                                    <div class="iq-header-title">-->
+<!--                                        <h4 class="card-title">History Purchase</h4>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="card-body">-->
+<!--                                    <div class="col-lg-12">-->
+<!--                                        <div class="table-responsive rounded mb-3">-->
+<!--                                            <table id="datatable" class="table mb-0 tbl-server-info">-->
+<!--                                                <thead class="bg-white text-uppercase">-->
+<!--                                                <tr class="ligth ligth-data">-->
+<!--                                                    <th>Order Id</th>-->
+<!--                                                    <th>Total Amount</th>-->
+<!--                                                    <th>Cash</th>-->
+<!--                                                    <th>Change</th>-->
+<!--                                                    <th>Date of Purchase</th>-->
+<!--                                                    <th>Product quantity</th>-->
+<!--                                                    <th>Action</th>-->
+<!--                                                </tr>-->
+<!--                                                </thead>-->
+<!--                                                <tbody id="table-body-orders" class="ligth-body">-->
+
+<!--                                                </tbody>-->
+<!--                                            </table>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="createCustomer" class="alert alert-success d-inline position-fixed small"
+     style="bottom: 20px; right: 20px">
+    <strong></strong> has been created
+</div>
+<div id="loadProductFail" class="alert alert-danger d-inline position-fixed small"
+     style="bottom: 20px; right: 20px">
+    <strong></strong>
+</div>
+<!-- Backend Bundle JavaScript -->
+<script th:src="@{/assets/js/backend-bundle.min.js}"></script>
+
+<!-- Table Tree view JavaScript -->
+<script th:src="@{/assets/js/table-treeview.js}"></script>
+
+<!-- Chart Custom JavaScript -->
+<script th:src="@{/assets/js/customizer.js}"></script>
+
+<!-- Chart Custom JavaScript -->
+<script async th:src="@{/assets/js/chart-custom.js}"></script>
+
+<!-- app JavaScript -->
+<script th:src="@{/assets/js/app.js}"></script>
+<script>
+    function fetchCustomerData() {
+        var phone = $('#phoneInput').val();
+
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+        $.ajax({
+            type: 'POST',
+            url: '/customers/find-by-phone',
+            data: { phone: phone },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            success: function (data) {
+                sessionStorage.setItem('data', JSON.stringify(data));
+                displayCustomerInfo(data)
+            },
+            error: function () {
+                notifyCreate(phone)
+            }
+        });
+    }
+    $('#phoneInput').on('change', function () {
+        fetchCustomerData();
+    });
+    // Check if there's data in sessionStorage when the page loads
+    document.addEventListener('DOMContentLoaded', function () {
+        var sessesionData = sessionStorage.getItem('data');
+
+        if (sessesionData) {
+            var data = JSON.parse(sessesionData);
+            displayCustomerInfo(data)
+        }
+        sessesionData = sessionStorage.getItem('dataOrder');
+
+        if (sessesionData) {
+            var dataOrder = JSON.parse(sessesionData);
+            showProductOrder(dataOrder)
+        }
+    });
+    // display information customer and history purchase
+    function displayCustomerInfo(data){
+        $('#nameInput').val(data.customer.name);
+        $('#phoneInput').val(data.customer.phone);
+        $('#addressInput').val(data.customer.address);
+
+        $('.phone-display').val(data.customer.phone);
+        $('.name-display').val(data.customer.name);
+        $('.address-display').val(data.customer.address);
+        
+        // console.log(data)
+
+        var orderList = data.customer.orderProduct
+        var tableBody = document.getElementById('table-body-orders');
+        tableBody.innerHTML = ''
+
+        orderList.forEach( (order) => {
+            var newRow = document.createElement('tr');
+            var createdAtDate = new Date(order.createdAt);
+
+            var formattedDate = createdAtDate.toISOString().split('T')[0];
+            var totalQuantity = order.orderItems.reduce((acc, item) => acc + item.quantity, 0);
+
+            newRow.innerHTML = `
+                                        <td>${order.id}</td>
+                                        <td>${order.totalAmount}</td>
+                                        <td>${order.cash}</td>
+                                        <td>${order.cash - order.totalAmount}</td>
+                                        <td>${formattedDate}</td>
+                                        <td>${totalQuantity}</td>
+                                        <td>
+                                            <div class="d-flex align-items-center list-action">
+                                                            <button type="button" class="btn btn-primary mt-2" data-toggle="modal" data-target=".bd-example-modal-xl"><i
+                                                                    class="ri-eye-line mr-0"></i> View Details</button>
+                                                             <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-hidden="true">
+                                                                <div class="modal-dialog modal-xl">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title">Order Detail</h5>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">×</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <div class="col-lg-12">
+                                                                                <div class="table-responsive rounded mb-3">
+                                                                                    <table id="datatable" class="table mb-0 tbl-server-info">
+                                                                                        <thead class="bg-white text-uppercase">
+                                                                                        <tr class="ligth ligth-data">
+                                                                                            <th>Id</th>
+                                                                                            <th>Name Product</th>
+                                                                                            <th>Price</th>
+                                                                                            <th>Quantity</th>
+                                                                                            <th>Subtotal</th>
+                                                                                        </tr>
+                                                                                        </thead>
+                                                                                        <tbody class="ligth-body" id="${order.id}">
+
+                                                                                        </tbody>
+                                                                                    </table>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                            </div>
+                                        </td>
+                                        `;
+            tableBody.appendChild(newRow);
+            var modalTableBody = document.getElementById(`${order.id}`);
+            order.orderItems.forEach(item => {
+                var row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.id}</td>
+                    <td>
+
+                         <div class="d-flex align-items-center">
+                                                <img src="data:image/png;base64,${item.product.image}"
+                                                    class="img-fluid rounded avatar-50 mr-3" alt="image">
+                                                <div>${item.product.name}</div>
+                                            </div>
+                    </td>
+                    <td>${item.product.retailPrice}</td>
+                    <td>${item.quantity}</td>
+                    <td>${item.quantity * item.product.retailPrice}</td>
+                `;
+                modalTableBody.appendChild(row);
+            });
+        })
+    }
+    // display information customer
+    $(document).ready(function () {
+        $('#btn-enter-customer').click(function () {
+            var phone = $('#phoneInput').val();
+            var name = $('#nameInput').val();
+            var address = $('#addressInput').val();
+
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+
+            $.ajax({
+                type: 'POST',
+                url: '/customers/update-by-phone',
+                data: { phone: phone, name:name, address:address},
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                success: function (data) {
+                    // console.log(data)
+                },
+                error: function () {
+                }
+            });
+
+            $('.phone-display').val(phone);
+            $('.name-display').val(name);
+            $('.address-display').val(address);
+
+            $('#enterCustomerModal').modal('hide');
+        });
+
+        $('#btn-reset-customer').click(function () {
+            $('#phoneInput').val('');
+            $('#nameInput').val('');
+            $('#addressInput').val('');
+            sessionStorage.removeItem('data');
+        })
+    });
+    function notifyCreate(phone) {
+        $('#createCustomer strong').html(phone)
+        $('#createCustomer').fadeTo(2000, 1)
+        setTimeout(() => {
+            $('#createCustomer').fadeTo(2000, 0)
+        }, 4000);
+    }
+
+    $(window).on('load', () => {
+        $('#createCustomer').fadeTo(10, 0);
+        $('#loadProductFail').fadeTo(10, 0)
+    });
+    //==========================================================Search product==========================================================
+    $('#search-product').on('change', function () {
+        var barcode = $('#search-product').val();
+        addProduct(barcode);
+    });
+    function addProduct(barcode) {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+        $.ajax({
+            type: 'POST',
+            url: '/sales/search-and-add',
+            data: { barcode: barcode },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            success: function (data) {
+                console.log(data)
+                var sessionData = sessionStorage.getItem('dataOrder');
+                var productList = [];
+                if (data.product.quantityOfBranch > 0){
+                    if (sessionData) {
+                        productList = JSON.parse(sessionData);
+                    }
+                    // Check if productList is an array, if not initialize it as an empty array
+                    if (!Array.isArray(productList)) {
+                        productList = [];
+                    }
+                    // Check if the product exists in the list
+                    var existingProductIndex = productList.findIndex(item => item.product.id === data.product.id);
+                    if (existingProductIndex !== -1) {
+                        // If the product exists, increment its quantity
+                        productList[existingProductIndex].quantity += 1;
+                        showProductOrder(productList)
+                    } else {
+                        addProductToCart(data.product)
+                        // If the product doesn't exist, add it to the list
+                        var product = { product: data.product, quantity: 1 };
+                        productList.push(product);
+                    }
+                    // Update the session storage with the modified product list
+                    sessionStorage.setItem('dataOrder', JSON.stringify(productList));
+                    updateCash()
+                }
+                else {
+                    notifyLoadProductFail(barcode, " was sold out")
+                }
+            },
+            error: function () {
+                notifyLoadProductFail(barcode, " added failed")
+            }
+        });
+        $('#search-product').val('');
+    }
+    function notifyLoadProductFail(barcode, message) {
+        $('#loadProductFail strong').html(barcode + message)
+        $('#loadProductFail').fadeTo(2000, 1)
+        setTimeout(() => {
+            $('#loadProductFail').fadeTo(2000, 0)
+        }, 4000);
+    }
+    //==========================================================Order Details==========================================================
+    function addProductToCart(product){
+        var tableBody = document.getElementById('table-body-orders-cart');
+        var newRow = document.createElement('tr');
+
+        const inputId = `quantity-${product.name.replaceAll(' ', '-')}`;
+        const removeButtonId = `remove-${product.name.replaceAll(' ', '-')}`;
+        newRow.innerHTML = `
+                                                    <td>
+                                                        <div class="crm-profile-img-edit position-relative">
+                                                            <div class="image ">
+                                                                <i id="${removeButtonId}" class="fas fa-times-circle fa-lg"
+                                                                   style="color: #ff1a1a;"></i>
+                                                            </div>
+                                                            <img class="img-fluid rounded avatar-80 mr-3 w- h-auto"
+                                                                 src="data:image/png;base64,${product.image}"
+                                                                 alt="profile-pic">
+                                                            ${product.name}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group" role="group" aria-label="Quantity">
+                                                            <button type="button" onclick="updateQuantity('${product.name}', -1)"
+                                                                class="btn btn-outline-primary decrease-btn">-</button>
+                                                            <input id="${inputId}" class="form-control quantity-input text-center" style="max-width: 100px;" value="1">
+                                                            <button type="button" onclick="updateQuantity('${product.name}', 1)"
+                                                                class="btn btn-outline-primary increase-btn">+</button>
+                                                        </div>
+                                                    </td>
+                                                    <td>${product.retailPrice}</td>`
+        tableBody.appendChild(newRow)
+
+        //remove button
+        const removeButton = document.getElementById(removeButtonId);
+        removeButton.addEventListener('click', function() {
+            removeTableRow(newRow, product.name);
+        });
+
+    }
+    function removeTableRow(row, productName) {
+        // Retrieve the dataOrder from sessionStorage
+        var sessionData = sessionStorage.getItem('dataOrder');
+        if (sessionData) {
+            var dataOrder = JSON.parse(sessionData);
+
+            var indexToRemove = dataOrder.findIndex(item => item.product.name === productName);
+
+            if (indexToRemove !== -1) {
+                // Remove the product from dataOrder at the found index
+                dataOrder.splice(indexToRemove, 1);
+
+                // Update sessionStorage with the modified dataOrder
+                sessionStorage.setItem('dataOrder', JSON.stringify(dataOrder));
+            }
+        }
+        row.remove();
+        updateCash()
+    }
+    function showProductOrder(dataOrder){
+        var tableBody = document.getElementById('table-body-orders-cart');
+        tableBody.innerHTML = ''
+        var sum = 0 ;
+        dataOrder.forEach((productData) => {
+            var product = productData.product;
+            var quantity = productData.quantity;
+
+            var newRow = document.createElement('tr');
+
+            const inputId = `quantity-${product.name.replaceAll(' ', '-')}`;
+            const removeButtonId = `remove-${product.name.replaceAll(' ', '-')}`;
+
+            newRow.innerHTML = `
+                    <td>
+                        <div class="crm-profile-img-edit position-relative">
+                            <div class="image">
+                                <i id="${removeButtonId}" class="fas fa-times-circle fa-lg" style="color: #ff1a1a;"></i>
+                            </div>
+                            <img class="img-fluid rounded avatar-80 mr-3 w- h-auto"
+                                src="data:image/png;base64,${product.image}"
+                                alt="profile-pic">
+                            ${product.name}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="btn-group" role="group" aria-label="Quantity">
+                            <button type="button" onclick="updateQuantity('${product.name}', -1)"
+                                class="btn btn-outline-primary decrease-btn">-</button>
+                            <input id="${inputId}" class="form-control quantity-input text-center" style="max-width: 100px;" value="${quantity}">
+                            <button type="button" onclick="updateQuantity('${product.name}', 1)"
+                                class="btn btn-outline-primary increase-btn">+</button>
+                        </div>
+                    </td>
+                    <td>${product.retailPrice * quantity}</td>
+                `;
+            sum += product.retailPrice * quantity
+
+            tableBody.appendChild(newRow);
+
+            // Remove button
+            const removeButton = document.getElementById(removeButtonId);
+            removeButton.addEventListener('click', function() {
+                removeTableRow(newRow, product.name);
+            });
+            $('#order-detail-cash strong').html(sum);
+        });
+    }
+    function updateCash(){
+        var sessionData = sessionStorage.getItem('dataOrder');
+        if (sessionData) {
+            var dataOrder = JSON.parse(sessionData);
+            if (dataOrder && dataOrder.length > 0) {
+                var sum = 0 ;
+                dataOrder.forEach((productData) => {
+                    var product = productData.product;
+                    var quantity = productData.quantity;
+
+                    sum += product.retailPrice * quantity
+
+                    $('#order-detail-cash strong').html(sum);
+                });
+            }
+            else {
+                $('#order-detail-cash strong').html(0);
+            }
+
+        }
+    }
+    function updateQuantity(productName, change) {
+        const inputId = `quantity-${productName.replaceAll(' ', '-')}`;
+        const quantityInput = document.getElementById(inputId);
+
+        if (quantityInput) {
+            let currentValue = parseInt(quantityInput.value);
+            let newQuantity = isNaN(currentValue) ? 1 : currentValue + change;
+
+            if (newQuantity < 1) {
+                newQuantity = 1;
+            }
+
+            quantityInput.value = newQuantity;
+            updateQuantityInSessionStorage(productName, newQuantity);
+        }
+    }
+    function updateQuantityInSessionStorage(productName, newQuantity) {
+        var sessionData = sessionStorage.getItem('dataOrder');
+        if (sessionData) {
+            var dataOrder = JSON.parse(sessionData);
+            // Find the index of the product in dataOrder
+            const productIndex = dataOrder.findIndex(item => item.product.name === productName);
+            if (productIndex !== -1) {
+                // Update the quantity of the found product
+                dataOrder[productIndex].quantity = newQuantity;
+                // Update sessionStorage with the modified dataOrder
+                sessionStorage.setItem('dataOrder', JSON.stringify(dataOrder));
+            }
+            showProductOrder(dataOrder)
+        }
+    }
+    function resetOrder(){
+        sessionStorage.removeItem('dataOrder');
+        var tableBody = document.getElementById('table-body-orders-cart');
+        tableBody.innerHTML = ''
+        $('#order-detail-cash strong').html(0);
+    }
+    resetOrder()
+    //==========================================================Check out==========================================================
+    document.addEventListener("DOMContentLoaded", function() {
+        const checkoutButton = document.querySelector('#checkout');
+        checkoutButton.addEventListener('click', function() {
+            var sessionData = sessionStorage.getItem('dataOrder');
+            if (sessionData) {
+                var dataOrder = JSON.parse(sessionData);
+                console.log(dataOrder)
+
+                var token = $("meta[name='_csrf']").attr("content");
+                var header = $("meta[name='_csrf_header']").attr("content");
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/sales/checkout',
+                    data: sessionData,
+                    contentType: 'application/json',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (data) {
+                        if (data && typeof data === 'string') {
+                            window.location.href = data;
+                        }
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+        })
+    })
+</script>
+</body>
+</html>

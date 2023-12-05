@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main-layout}"
+      xmlns:th="http://www.thymeleaf.org">
+
+<body class="  ">
+    <article layout:fragment="content">
+        <div class="content-page">
+            <div class="container-fluid add-form-list">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between">
+                                <div class="header-title">
+                                    <h4 class="card-title">Add Product</h4>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <form th:action="@{/products/add}" method="post" enctype="multipart/form-data" data-toggle="validator">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Name *</label>
+                                                <input type="text" class="form-control" placeholder="Enter Name"
+                                                    data-errors="Please Enter Name." required name="name">
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>BarCode *</label>
+                                                <input type="text" class="form-control" placeholder="Enter Code"
+                                                    data-errors="Please Enter Code." required name="barCode">
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+<!--                                        <div class="col-md-6">-->
+<!--                                            <div class="form-group">-->
+<!--                                                <label>Barcode Symbology *</label>-->
+<!--                                                <select name="type" class="selectpicker form-control" data-style="py-0">-->
+<!--                                                    <option>CREM01</option>-->
+<!--                                                    <option>UM01</option>-->
+<!--                                                    <option>SEM01</option>-->
+<!--                                                    <option>COF01</option>-->
+<!--                                                    <option>FUN01</option>-->
+<!--                                                    <option>DIS01</option>-->
+<!--                                                    <option>NIS01</option>-->
+<!--                                                </select>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Brand *</label>
+                                                <select name="brand" class="selectpicker form-control" data-style="py-0">
+                                                    <th:block th:each="brand : ${brands}">
+                                                        <option th:text="${brand.getName()}"></option>
+                                                    </th:block>
+                                                </select>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Import Price *</label>
+                                                <input type="text" class="form-control" placeholder="Enter Cost"
+                                                    data-errors="Please Enter Cost." required name="importPrice">
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Retail Price *</label>
+                                                <input type="text" class="form-control" placeholder="Enter Price"
+                                                    data-errors="Please Enter Price." required name="retailPrice">
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+<!--                                        <div class="col-md-12">-->
+<!--                                            <div class="form-group">-->
+<!--                                                <label>Tax Method *</label>-->
+<!--                                                <select name="type" class="selectpicker form-control" data-style="py-0">-->
+<!--                                                    <option>Exclusive</option>-->
+<!--                                                    <option>Inclusive</option>-->
+<!--                                                </select>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Quantity *</label>
+                                                <input type="text" class="form-control" placeholder="Enter Quantity"
+                                                       data-errors="Please Enter Quantity." required name="quantity">
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Image</label>
+                                                <input type="file" class="form-control image-file" name="image"
+                                                    accept="image/*">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Description / Product Details</label>
+                                                <textarea class="form-control" rows="4" required name="description"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mr-2">Add Product</button>
+                                    <button type="reset" class="btn btn-danger">Reset</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+</body>
+
+</html>

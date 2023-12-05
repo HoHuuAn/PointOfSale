@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main-layout}"
+      xmlns:th="http://www.thymeleaf.org">
+<body class="  ">
+<article layout:fragment="content">
+    <div class="content-page">
+        <div class="container-fluid add-form-list">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="header-title">
+                                <h4 class="card-title">Update Product</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{'/products/edit/' + ${product.getId()}}" method="post" enctype="multipart/form-data" data-toggle="validator">
+                                <div class="form-group row align-items-center">
+                                    <div class="col-md-6">
+                                        <div class="profile-img-edit">
+                                            <div class="crm-profile-img-edit">
+                                                <img class="crm-profile-pic rounded-circle avatar-100"
+                                                     th:src="@{'data:image/png;base64,' + ${product.getImage()}}"
+                                                     alt="profile-pic" id="profile-image">
+                                                <div class="crm-p-image bg-primary">
+                                                    <i class="las la-pen upload-button"></i>
+                                                    <input class="file-upload" type="file"
+                                                           accept="image/*" onchange="displayImage()" name="image">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="profile-img-edit">
+                                            <div class="crm-profile-img-edit">
+                                                <img class="crm-profile-pic avatar-1000"
+                                                     th:src="@{'/products/' + ${product.getName()} + '/code.jpg'}"
+                                                     alt="profile-pic" id="code">
+<!--                                                <div class="crm-p-image bg-primary">-->
+<!--                                                    <i class="las la-pen upload-button"></i>-->
+<!--                                                    <input class="file-upload" type="file"-->
+<!--                                                           accept="image/*" onchange="displayImage()" name="image">-->
+<!--                                                </div>-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Name *</label>
+                                            <input type="text" class="form-control" placeholder="Enter Name"
+                                                   data-errors="Please Enter Name." name="name" th:value="${product.getName()}">
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>BarCode *</label>
+                                            <input type="text" class="form-control" placeholder="Enter Code"
+                                                   data-errors="Please Enter Code." name="barCode" th:value="${product.getBarCode()}">
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <!--                                        <div class="col-md-6">-->
+                                    <!--                                            <div class="form-group">-->
+                                    <!--                                                <label>Barcode Symbology *</label>-->
+                                    <!--                                                <select name="type" class="selectpicker form-control" data-style="py-0">-->
+                                    <!--                                                    <option>CREM01</option>-->
+                                    <!--                                                    <option>UM01</option>-->
+                                    <!--                                                    <option>SEM01</option>-->
+                                    <!--                                                    <option>COF01</option>-->
+                                    <!--                                                    <option>FUN01</option>-->
+                                    <!--                                                    <option>DIS01</option>-->
+                                    <!--                                                    <option>NIS01</option>-->
+                                    <!--                                                </select>-->
+                                    <!--                                            </div>-->
+                                    <!--                                        </div>-->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Brand *</label>
+                                            <input type="text" class="form-control" placeholder="Enter brand"
+                                                   data-errors="Please Enter Brand." name="brand" th:value="${product.getBrand().getName()}">
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Import Price *</label>
+                                            <input type="text" class="form-control" placeholder="Enter Cost"
+                                                   data-errors="Please Enter Cost." name="importPrice" th:value="${product.getImportPrice()}">
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Retail Price *</label>
+                                            <input type="text" class="form-control" placeholder="Enter Price"
+                                                   data-errors="Please Enter Price."  name="retailPrice" th:value="${product.getRetailPrice()}">
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <!--                                        <div class="col-md-12">-->
+                                    <!--                                            <div class="form-group">-->
+                                    <!--                                                <label>Tax Method *</label>-->
+                                    <!--                                                <select name="type" class="selectpicker form-control" data-style="py-0">-->
+                                    <!--                                                    <option>Exclusive</option>-->
+                                    <!--                                                    <option>Inclusive</option>-->
+                                    <!--                                                </select>-->
+                                    <!--                                            </div>-->
+                                    <!--                                        </div>-->
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Quantity *</label>
+                                            <input type="text" class="form-control" placeholder="Enter Quantity"
+                                                   data-errors="Please Enter Quantity." name="quantity" th:value="${product.getQuantity()}">
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Description / Product Details</label>
+                                            <textarea class="form-control" rows="4"  name="description" th:text="${product.getDescription()}"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary mr-2">Update Product</button>
+<!--                                <button type="reset" class="btn btn-danger">Reset</button>-->
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+</body>
+</html>

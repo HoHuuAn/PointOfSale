@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layouts/main-layout}">
+<body  class="  ">
+<article layout:fragment="content">
+    <div class="content-page">
+        <div class="container-fluid add-form-list">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="header-title">
+                                <h4 class="card-title">Add Brand</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{'/brands/edit/' + ${brand.getId()}}" data-toggle="validator" method="post" enctype="multipart/form-data">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <img th:src="@{'/brands/' + ${brand.getName()} + '/' + ${brand.getImage()}}"
+                                                 class="img-fluid rounded avatar-100 mr-3 w-15 h-auto" alt="image" id="image">
+                                            <div class="crm-p-image bg-primary">
+                                                <i class="las la-pen upload-button"></i>
+                                                <input class="file-upload" type="file"
+                                                       accept="image/*" onchange="displayImage()" name="image">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Name *</label>
+                                            <input type="text" class="form-control" placeholder="Enter Brand Name"
+                                                   required name="name" th:value="${brand.getName()}">
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Website *</label>
+                                            <input type="text" class="form-control" placeholder="Enter Website"
+                                                   required name="website" th:value="${brand.getWebsite()}">
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Description Brand</label>
+                                            <textarea class="form-control" rows="4" required th:text="${brand.getDescription()}" name="description"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary mr-2">Update Brand</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+</body>
+</html>
