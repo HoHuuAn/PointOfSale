@@ -2,9 +2,7 @@ package com.JavaTech.PointOfSales.controller;
 
 import com.JavaTech.PointOfSales.dto.CustomerDTO;
 import com.JavaTech.PointOfSales.model.Customer;
-import com.JavaTech.PointOfSales.model.OrderProduct;
 import com.JavaTech.PointOfSales.service.CustomerService;
-import com.JavaTech.PointOfSales.service.OrderProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

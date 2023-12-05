@@ -1,4 +1,4 @@
-package com.JavaTech.PointOfSales.Utils;
+package com.JavaTech.PointOfSales.utils;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;

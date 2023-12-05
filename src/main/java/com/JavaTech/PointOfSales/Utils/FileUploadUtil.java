@@ -1,4 +1,4 @@
-package com.JavaTech.PointOfSales.Utils;
+package com.JavaTech.PointOfSales.utils;
 
 import java.io.*;
 import java.nio.file.*;

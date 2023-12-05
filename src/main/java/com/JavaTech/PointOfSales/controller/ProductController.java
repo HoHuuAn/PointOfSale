@@ -1,8 +1,8 @@
 package com.JavaTech.PointOfSales.controller;
 
 
-import com.JavaTech.PointOfSales.Utils.BarcodeUtil;
-import com.JavaTech.PointOfSales.Utils.ImageUtil;
+import com.JavaTech.PointOfSales.utils.BarcodeUtil;
+import com.JavaTech.PointOfSales.utils.ImageUtil;
 import com.JavaTech.PointOfSales.dto.ProductDTO;
 import com.JavaTech.PointOfSales.model.Brand;
 import com.JavaTech.PointOfSales.model.Product;

@@ -1,4 +1,4 @@
-package com.JavaTech.PointOfSales.Utils;
+package com.JavaTech.PointOfSales.utils;
 
 import com.JavaTech.PointOfSales.dto.CustomerDTO;
 import com.JavaTech.PointOfSales.model.OrderDetail;

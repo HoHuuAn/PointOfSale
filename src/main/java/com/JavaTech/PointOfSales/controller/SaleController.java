@@ -1,7 +1,7 @@
 package com.JavaTech.PointOfSales.controller;
 
 
-import com.JavaTech.PointOfSales.Utils.InvoiceGeneratorUtil;
+import com.JavaTech.PointOfSales.utils.InvoiceGeneratorUtil;
 import com.JavaTech.PointOfSales.dto.CustomerDTO;
 import com.JavaTech.PointOfSales.dto.OrderProductDTO;
 import com.JavaTech.PointOfSales.dto.ProductDTO;

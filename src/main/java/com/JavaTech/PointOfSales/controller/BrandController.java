@@ -1,6 +1,6 @@
 package com.JavaTech.PointOfSales.controller;
 
-import com.JavaTech.PointOfSales.Utils.ImageBrandUtil;
+import com.JavaTech.PointOfSales.utils.ImageBrandUtil;
 import com.JavaTech.PointOfSales.model.Brand;
 import com.JavaTech.PointOfSales.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
