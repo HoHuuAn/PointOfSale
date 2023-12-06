@@ -7,6 +7,7 @@ import com.JavaTech.PointOfSales.repository.RoleRepository;
 import com.JavaTech.PointOfSales.repository.UserRepository;
 import com.JavaTech.PointOfSales.service.impl.EmailServiceImpl;
 import com.JavaTech.PointOfSales.service.UserService;
+import com.JavaTech.PointOfSales.utils.ImageUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -64,16 +65,6 @@ public class UserController {
     }
 
     @PostMapping(value = "/add")
-//    public String addPostUser(@RequestParam(name = "avatar", required = false) MultipartFile avatar,
-//                              @RequestParam("fullName") String fullName,
-//                              @RequestParam("phone") String phone,
-//                              @RequestParam("email") String email,
-//                              @RequestParam("gender") String gender,
-//                              @RequestParam("username") String username,
-//                              @RequestParam("password") String password,
-//                              @RequestParam("active") String active,
-//                              @RequestParam("role") String role,
-//                              @RequestParam("sendEmail") boolean sendEmail) throws IOException {
     public String addPostUser(  @RequestParam(name = "avatar", required = false) MultipartFile avatar,
                                 @Valid @RequestParam("fullName") String fullName,
                                 @RequestParam("phone") String phone,
@@ -86,19 +77,26 @@ public class UserController {
                                 @RequestParam("sendEmail") boolean sendEmail) throws IOException {
 
         //avatar
-        String fileName;
-        if (avatar != null && !avatar.isEmpty()) {
-            fileName = fullName.trim()+".jpg";
-            FileUploadUtil.saveFile(fileName, avatar);
-        } else {
+//        String fileName;
+//        if (avatar != null && !avatar.isEmpty()) {
+//            fileName = fullName.trim()+".jpg";
+//            FileUploadUtil.saveFile(fileName, avatar);
+//        } else {
+//            String defaultImageFilePath = "static/assets/images/user/01.jpg";
+//            ClassPathResource resource = new ClassPathResource(defaultImageFilePath);
+//            byte[] defaultImageBytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
+//
+//            MultipartFile defaultImageFile = new MockMultipartFile("default-avatar.png", defaultImageBytes);
+//            fileName = fullName.trim()+".jpg";
+//
+//            FileUploadUtil.saveFile(fileName, defaultImageFile);
+//        }
+
+        if(avatar == null || !avatar.isEmpty()){
             String defaultImageFilePath = "static/assets/images/user/01.jpg";
             ClassPathResource resource = new ClassPathResource(defaultImageFilePath);
             byte[] defaultImageBytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
-
-            MultipartFile defaultImageFile = new MockMultipartFile("default-avatar.png", defaultImageBytes);
-            fileName = fullName.trim()+".jpg";
-
-            FileUploadUtil.saveFile(fileName, defaultImageFile);
+            avatar = new MockMultipartFile("default-avatar.png", defaultImageBytes);
         }
 
         //role
@@ -116,11 +114,10 @@ public class UserController {
         assert admin != null;
         Branch branch = admin.getBranch();
 
-
         //add
         User user = User.builder()
                 .fullName(fullName)
-                .avatar(fileName)
+                .avatar(ImageUtil.convertToBase64(avatar))
                 .phone(phone)
                 .email(email)
                 .gender(gender)
@@ -220,31 +217,32 @@ public class UserController {
         model.addAttribute("user", user);
         model.addAttribute("role_user", ERole.ROLE_USER);
         model.addAttribute("role_admin", ERole.ROLE_ADMIN);
-        System.out.println(user);
         return "/users/page-edit-users";
     }
 
     @PostMapping("/update-avatar")
     public String updateAvatar(@RequestParam(name = "avatar") MultipartFile avatar,
-                               @RequestParam("username") String username) throws IOException {
+                               @RequestParam(name = "username") String username) throws IOException {
         User user = userRepository.getUserByUsername(username).orElseThrow();
+        System.out.println(user.getUsername());
+//        String fileName;
+//        if (avatar != null && !avatar.isEmpty()) {
+//            fileName = (user.getFullName().equals("null")?username:user.getFullName()).trim()+".jpg";
+//            FileUploadUtil.saveFile(fileName, avatar);
+//        } else {
+//            String defaultImageFilePath = "static/assets/images/user/01.jpg";
+//            ClassPathResource resource = new ClassPathResource(defaultImageFilePath);
+//            byte[] defaultImageBytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
+//
+//            MultipartFile defaultImageFile = new MockMultipartFile("default-avatar.png", defaultImageBytes);
+//            fileName = (user.getFullName().equals("null")?username:user.getFullName()).trim()+".jpg";
+//
+//            FileUploadUtil.saveFile(fileName, defaultImageFile);
+//        }
 
-        String fileName;
-        if (avatar != null && !avatar.isEmpty()) {
-            fileName = (user.getFullName().equals("null")?username:user.getFullName()).trim()+".jpg";
-            FileUploadUtil.saveFile(fileName, avatar);
-        } else {
-            String defaultImageFilePath = "static/assets/images/user/01.jpg";
-            ClassPathResource resource = new ClassPathResource(defaultImageFilePath);
-            byte[] defaultImageBytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
-
-            MultipartFile defaultImageFile = new MockMultipartFile("default-avatar.png", defaultImageBytes);
-            fileName = (user.getFullName().equals("null")?username:user.getFullName()).trim()+".jpg";
-
-            FileUploadUtil.saveFile(fileName, defaultImageFile);
-        }
-        user.setAvatar(fileName);
-        return "redirect:/user/profile/" + username;
+        user.setAvatar(ImageUtil.convertToBase64(avatar));
+        userService.saveOrUpdate(user);
+        return "redirect:/user/profile";
     }
 
     @PostMapping("/change-password")

@@ -25,14 +25,12 @@ public class AuthController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-
     @GetMapping("/login")
     public String login( Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             return "/authentication/auth-sign-in";
         }
-
         return "redirect:/";
     }
 

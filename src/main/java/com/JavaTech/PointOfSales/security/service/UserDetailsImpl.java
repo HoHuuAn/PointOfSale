@@ -11,9 +11,11 @@ import java.util.stream.Collectors;
 public class UserDetailsImpl implements UserDetails {
 
     private final User user;
+    private String avatar;
 
-    public UserDetailsImpl(User user) {
+    public UserDetailsImpl(User user, String avatar) {
         this.user = user;
+        this.avatar = avatar;
     }
 
     @Override
@@ -54,4 +56,12 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public boolean isFirstLogin(){return user.isFirstLogin();}
+
+    public String getAvatar() {
+        return user.getAvatar();
+    }
+
+    public String setAvatar(String avatar) {
+        return this.avatar = avatar;
+    }
 }

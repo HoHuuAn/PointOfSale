@@ -6,6 +6,8 @@ import com.JavaTech.PointOfSales.service.BranchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BranchServiceImpl implements BranchService {
 
@@ -15,5 +17,10 @@ public class BranchServiceImpl implements BranchService {
     @Override
     public Branch saveOrUpdate(Branch branch) {
         return branchRepository.save(branch);
+    }
+
+    @Override
+    public List<Branch> listAll() {
+        return branchRepository.findAll();
     }
 }

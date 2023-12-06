@@ -50,6 +50,9 @@ public class Product {
     @Column(name = "bar_code")
     private String barCode;
 
+    @Column(name = "image_bar_code", columnDefinition = "TEXT")
+    private String imageBarCode;
+
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 

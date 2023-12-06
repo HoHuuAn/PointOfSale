@@ -241,16 +241,16 @@
                                 </svg>
                             </a>
                             <ul id="people" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-                                <li class="">
-                                    <a th:href="@{/backend/page-list-customers.html}">
-                                        <i class="las la-minus"></i><span>Customers</span>
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a th:href="@{/backend/page-add-customers.html}">
-                                        <i class="las la-minus"></i><span>Add Customers</span>
-                                    </a>
-                                </li>
+<!--                                <li class="">-->
+<!--                                    <a th:href="@{/backend/page-list-customers.html}">-->
+<!--                                        <i class="las la-minus"></i><span>Customers</span>-->
+<!--                                    </a>-->
+<!--                                </li>-->
+<!--                                <li class="">-->
+<!--                                    <a th:href="@{/backend/page-add-customers.html}">-->
+<!--                                        <i class="las la-minus"></i><span>Add Customers</span>-->
+<!--                                    </a>-->
+<!--                                </li>-->
                                 <li class="">
                                     <a th:href="@{/user/list}">
                                         <i class="las la-minus"></i><span>Users</span>
@@ -261,16 +261,16 @@
                                         <i class="las la-minus"></i><span>Add Users</span>
                                     </a>
                                 </li>
-                                <li class="">
-                                    <a th:href="@{/backend/page-list-suppliers.html}">
-                                        <i class="las la-minus"></i><span>Suppliers</span>
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a th:href="@{/backend/page-add-supplier.html}">
-                                        <i class="las la-minus"></i><span>Add Suppliers</span>
-                                    </a>
-                                </li>
+<!--                                <li class="">-->
+<!--                                    <a th:href="@{/backend/page-list-suppliers.html}">-->
+<!--                                        <i class="las la-minus"></i><span>Suppliers</span>-->
+<!--                                    </a>-->
+<!--                                </li>-->
+<!--                                <li class="">-->
+<!--                                    <a th:href="@{/backend/page-add-supplier.html}">-->
+<!--                                        <i class="las la-minus"></i><span>Add Suppliers</span>-->
+<!--                                    </a>-->
+<!--                                </li>-->
                             </ul>
                         </li>
                         <li class="">
@@ -546,7 +546,7 @@
                                 <li class="nav-item nav-icon dropdown caption-content">
                                     <a href="#" class="search-toggle dropdown-toggle" id="dropdownMenuButton4"
                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <img th:src="@{/assets/images/user/1.png}" class="img-fluid rounded" alt="user">
+                                        <img th:src="@{'data:image/png;base64,'+ ${#authentication.principal.avatar}}" class="img-fluid rounded" alt="user">
                                     </a>
                                     <div class="iq-sub-dropdown dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <div class="card shadow-none m-0">
@@ -554,7 +554,7 @@
                                                 <div class="media-body profile-detail text-center">
                                                     <img th:src="@{/assets/images/page-img/profile-bg.jpg}" alt="profile-bg"
                                                         class="rounded-top img-fluid mb-4">
-                                                    <img th:src="@{/assets/images/user/1.png}" alt="profile-img"
+                                                    <img th:src="@{'data:image/png;base64,'+ ${#authentication.principal.avatar}}" alt="profile-img"
                                                          class="rounded profile-img img-fluid avatar-70">
                                                 </div>
                                                 <div class="p-3">

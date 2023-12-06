@@ -4,10 +4,14 @@ import com.JavaTech.PointOfSales.model.User;
 import com.JavaTech.PointOfSales.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -24,7 +28,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (!user.isUnlocked()) {
             throw new DisabledException("Your account is locked");
         }
-
-        return new UserDetailsImpl(user);
+        String avatar = user.getAvatar();
+        return new UserDetailsImpl(user, avatar);
     }
 }

@@ -3,6 +3,7 @@ package com.JavaTech.PointOfSales.controller;
 import com.JavaTech.PointOfSales.utils.ImageBrandUtil;
 import com.JavaTech.PointOfSales.model.Brand;
 import com.JavaTech.PointOfSales.service.BrandService;
+import com.JavaTech.PointOfSales.utils.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,7 +43,7 @@ public class BrandController {
                 .name(name)
                 .website(website)
                 .description(description)
-                .image(fileName)
+                .image(ImageUtil.convertToBase64(image))
                 .build();
         brandService.addOrSave(brand);
         return "redirect:/brands/list";
@@ -66,7 +67,7 @@ public class BrandController {
         ImageBrandUtil.saveFile(fileName, image);
 
         brand.setName(name);
-        brand.setImage(fileName);
+        brand.setImage(ImageUtil.convertToBase64(image));
         brand.setDescription(description);
         brand.setWebsite(website);
         brandService.addOrSave(brand);

@@ -19,7 +19,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <img th:src="@{'/brands/' + ${brand.getName()} + '/' + ${brand.getImage()}}"
+                                            <img th:src="@{'data:image/png;base64,' + ${brand.getImage()}}"
                                                  class="img-fluid rounded avatar-100 mr-3 w-15 h-auto" alt="image" id="image">
                                             <div class="crm-p-image bg-primary">
                                                 <i class="las la-pen upload-button"></i>
