@@ -29,7 +29,24 @@ public class BrandController {
         return "/brands/page-add-brand";
     }
 
-   
+    @PostMapping(value = "/add")
+    public String addPostBrand(@RequestParam("name") String name,
+                               @RequestParam("image") MultipartFile image,
+                               @RequestParam("website") String website,
+                               @RequestParam("description") String description) throws IOException {
+        //image
+        String fileName = name.trim()+".jpg";
+        ImageBrandUtil.saveFile(fileName, image);
+
+        Brand brand = Brand.builder()
+                .name(name)
+                .website(website)
+                .description(description)
+                .image(fileName)
+                .build();
+        brandService.addOrSave(brand);
+        return "redirect:/brands/list";
+    }
 
     @GetMapping(value = "/edit/{id}")
     public String showFormEdit(@PathVariable(name = "id") Long id, Model model){
@@ -38,6 +55,27 @@ public class BrandController {
         return "/brands/page-edit-brand";
     }
 
-   
+    @PostMapping(value = "/edit/{id}")
+    public String edit(@PathVariable(name = "id") Long id,
+                       @RequestParam("name") String name,
+                       @RequestParam("image") MultipartFile image,
+                       @RequestParam("website") String website,
+                       @RequestParam("description") String description) throws IOException{
+        Brand brand = brandService.findById(id);
+        String fileName = name.trim()+".jpg";
+        ImageBrandUtil.saveFile(fileName, image);
 
+        brand.setName(name);
+        brand.setImage(fileName);
+        brand.setDescription(description);
+        brand.setWebsite(website);
+        brandService.addOrSave(brand);
+        return "redirect:/brands/list";
+    }
+
+    @GetMapping(value = "/delete/{id}")
+    public String delete(@PathVariable(name = "id") Long id){
+        brandService.deleteById(id);
+        return "redirect:/brands/list";
+    }
 }
