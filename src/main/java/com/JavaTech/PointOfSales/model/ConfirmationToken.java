@@ -15,16 +15,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConfirmationToken {
-
-
-
-
-
-
-
-
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="token_id")

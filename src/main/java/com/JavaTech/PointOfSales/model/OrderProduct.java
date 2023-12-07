@@ -19,10 +19,11 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class OrderProduct {
-    @Id
-    @Column(name = "order_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
+
+
+
+
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
@@ -46,4 +47,10 @@ public class OrderProduct {
     @JoinColumn(name = "branch_id")
     @JsonBackReference
     private Branch branch;
+
+
+    @Id
+    @Column(name = "order_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 }

@@ -15,6 +15,10 @@ import java.util.List;
 @Builder
 @Data
 public class Branch {
+
+
+
+
     @Id
     @Column(name = "branch_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
