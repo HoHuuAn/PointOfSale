@@ -1,3 +1,20 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 package com.JavaTech.PointOfSales.payload;
 
 import com.JavaTech.PointOfSales.dto.CustomerDTO;

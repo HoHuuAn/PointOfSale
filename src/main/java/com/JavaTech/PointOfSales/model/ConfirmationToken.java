@@ -8,12 +8,22 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 import java.util.UUID;
 
+
 @Entity
 @Table(name="confirmationToken")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConfirmationToken {
+
+
+
+
+
+
+
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
