@@ -224,22 +224,6 @@ public class UserController {
     public String updateAvatar(@RequestParam(name = "avatar") MultipartFile avatar,
                                @RequestParam(name = "username") String username) throws IOException {
         User user = userRepository.getUserByUsername(username).orElseThrow();
-        System.out.println(user.getUsername());
-//        String fileName;
-//        if (avatar != null && !avatar.isEmpty()) {
-//            fileName = (user.getFullName().equals("null")?username:user.getFullName()).trim()+".jpg";
-//            FileUploadUtil.saveFile(fileName, avatar);
-//        } else {
-//            String defaultImageFilePath = "static/assets/images/user/01.jpg";
-//            ClassPathResource resource = new ClassPathResource(defaultImageFilePath);
-//            byte[] defaultImageBytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
-//
-//            MultipartFile defaultImageFile = new MockMultipartFile("default-avatar.png", defaultImageBytes);
-//            fileName = (user.getFullName().equals("null")?username:user.getFullName()).trim()+".jpg";
-//
-//            FileUploadUtil.saveFile(fileName, defaultImageFile);
-//        }
-
         user.setAvatar(ImageUtil.convertToBase64(avatar));
         userService.saveOrUpdate(user);
         return "redirect:/user/profile";
