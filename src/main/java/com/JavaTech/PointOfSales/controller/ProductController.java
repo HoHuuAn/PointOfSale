@@ -2,21 +2,19 @@ package com.JavaTech.PointOfSales.controller;
 
 
 import com.JavaTech.PointOfSales.model.*;
+import com.JavaTech.PointOfSales.security.service.*;
 import com.JavaTech.PointOfSales.service.*;
 import com.JavaTech.PointOfSales.utils.BarcodeUtil;
 import com.JavaTech.PointOfSales.utils.ImageUtil;
 import com.JavaTech.PointOfSales.dto.ProductDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;

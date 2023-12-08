@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "")
 public class HomeController {
 
-    @Autowired
-    UserRepository userRepository;
+
+
+
+
+
 
     @GetMapping(value = "/")
     public String index(Model model){
@@ -30,4 +33,13 @@ public class HomeController {
         }
         return "index";
     }
+
+
+
+
+
+    @Autowired
+    UserRepository userRepository;
+
+
 }

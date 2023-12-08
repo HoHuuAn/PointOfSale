@@ -1,4 +1,4 @@
-package com.JavaTech.PointOfSales.security.service;
+package com.JavaTech.PointOfSales.service;
 
 import com.JavaTech.PointOfSales.model.User;
 import org.springframework.security.core.GrantedAuthority;

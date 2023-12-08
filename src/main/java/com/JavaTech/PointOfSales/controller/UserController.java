@@ -1,6 +1,5 @@
 package com.JavaTech.PointOfSales.controller;
 
-import com.JavaTech.PointOfSales.utils.FileUploadUtil;
 import com.JavaTech.PointOfSales.model.*;
 import com.JavaTech.PointOfSales.repository.ConfirmationTokenRepository;
 import com.JavaTech.PointOfSales.repository.RoleRepository;

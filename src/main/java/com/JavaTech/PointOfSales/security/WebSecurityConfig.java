@@ -1,6 +1,6 @@
 package com.JavaTech.PointOfSales.security;
 
-import com.JavaTech.PointOfSales.security.service.UserDetailsServiceImpl;
+import com.JavaTech.PointOfSales.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
