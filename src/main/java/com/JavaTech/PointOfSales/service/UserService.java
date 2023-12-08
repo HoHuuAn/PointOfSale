@@ -19,4 +19,6 @@ public interface UserService {
     Optional<User> findByUsername(String username);
 
     void deleteById(Long id);
+
+    User getCurrentUser();
 }

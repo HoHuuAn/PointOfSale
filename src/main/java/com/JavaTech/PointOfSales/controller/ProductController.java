@@ -54,13 +54,7 @@ public class ProductController {
     }
 
     public QuantityProduct findByProduct(Product product){
-        Optional<User> info = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        User user = null;
-        if(info.isPresent()){
-            user = info.get();
-        }
-        assert user != null;
-        return quantityProductService.findByBranchAndProduct(user.getBranch(), product);
+        return quantityProductService.findByBranchAndProduct(userService.getCurrentUser().getBranch(), product);
     }
 
     @GetMapping(value = "/add")
@@ -96,19 +90,14 @@ public class ProductController {
         brandService.addOrSave(brand_org);
         productService.saveOrUpdate(product);
 
-        Optional<User> info = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        User user = null;
-        if(info.isPresent()){
-            user = info.get();
-        }
-        assert user != null;
-
+        //quantity
+        Branch branchCurrent = userService.getCurrentUser().getBranch();
         List<Branch> allBranches = branchService.listAll();
 
         for (Branch branch : allBranches) {
-            if (branch.equals(user.getBranch())) {
+            if (branch.equals(branchCurrent)) {
                 QuantityProduct quantityProduct = QuantityProduct.builder()
-                        .branch(user.getBranch())
+                        .branch(branchCurrent)
                         .product(product)
                         .quantity(quantity)
                         .build();
@@ -147,7 +136,7 @@ public class ProductController {
                        @RequestParam(name = "description") String description) throws IOException {
         //save barcode
         BarcodeUtil.generateCodeBarcode(barCode, name);
-        
+
         Brand brand_org = brandService.findByName(brand);
 
         Product product = productService.findById(id);
@@ -161,19 +150,11 @@ public class ProductController {
 
         //save barcode
         BarcodeUtil.generateCodeBarcode(barCode, name);
-
         productService.saveOrUpdate(product);
 
-
         //quantity
-        Optional<User> info = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        User user = null;
-        if(info.isPresent()){
-            user = info.get();
-        }
-        assert user != null;
         QuantityProduct quantityProduct = QuantityProduct.builder()
-                .branch(user.getBranch())
+                .branch(userService.getCurrentUser().getBranch())
                 .product(product)
                 .quantity(0)
                 .build();
