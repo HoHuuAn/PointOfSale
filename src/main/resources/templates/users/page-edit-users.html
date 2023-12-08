@@ -47,7 +47,7 @@
                                                         <div class="profile-img-edit">
                                                             <div class="crm-profile-img-edit">
                                                                 <img class="crm-profile-pic rounded-circle avatar-100"
-                                                                     th:src="@{'/user-photos/' + ${user.getFullName()} + '/' + ${user.getAvatar()}}"
+                                                                     th:src="@{'data:image/png;base64,' + ${user.getAvatar()}}"
                                                                      alt="profile-pic" id="profile-image">
                                                                 <div class="crm-p-image bg-primary">
                                                                     <i class="las la-pen upload-button"></i>

@@ -1,24 +1,22 @@
 package com.JavaTech.PointOfSales.controller;
 
 
+import com.JavaTech.PointOfSales.model.*;
+import com.JavaTech.PointOfSales.service.*;
 import com.JavaTech.PointOfSales.utils.BarcodeUtil;
 import com.JavaTech.PointOfSales.utils.ImageUtil;
 import com.JavaTech.PointOfSales.dto.ProductDTO;
-import com.JavaTech.PointOfSales.model.Brand;
-import com.JavaTech.PointOfSales.model.Product;
-import com.JavaTech.PointOfSales.model.QuantityProduct;
-import com.JavaTech.PointOfSales.model.User;
-import com.JavaTech.PointOfSales.service.BrandService;
-import com.JavaTech.PointOfSales.service.ProductService;
-import com.JavaTech.PointOfSales.service.QuantityProductService;
-import com.JavaTech.PointOfSales.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +39,9 @@ public class ProductController {
     private BrandService brandService;
 
     @Autowired
+    private BranchService branchService;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
@@ -48,26 +49,12 @@ public class ProductController {
 
     @GetMapping(value = "/list")
     public String listProduct(Model model){
-        List<ProductDTO> productDTOList = productService.listAll().stream()
-                .map(product -> {
-                    ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
-                    QuantityProduct quantityProduct = findByProduct(product);
-                    productDTO.setQuantityOfBranch(quantityProduct.getQuantity());
-                    return productDTO;
-                })
-                .collect(Collectors.toList());
-        model.addAttribute("listProducts", productDTOList);
+        model.addAttribute("listProducts", productService.listAllDTO());
         return "/products/page-list-product";
     }
 
     public QuantityProduct findByProduct(Product product){
-        Optional<User> info = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        User user = null;
-        if(info.isPresent()){
-            user = info.get();
-        }
-        assert user != null;
-        return quantityProductService.findByBranchAndProduct(user.getBranch(), product);
+        return quantityProductService.findByBranchAndProduct(userService.getCurrentUser().getBranch(), product);
     }
 
     @GetMapping(value = "/add")
@@ -85,11 +72,6 @@ public class ProductController {
                                  @RequestParam(name = "image") MultipartFile image,
                                  @RequestParam(name = "brand") String brand,
                                  @RequestParam(name = "description") String description) throws IOException {
-
-        
-        //save barcode
-        BarcodeUtil.generateCodeBarcode(barCode, name);
-
         //save product
         Brand brand_org = brandService.findByName(brand);
 
@@ -100,19 +82,45 @@ public class ProductController {
                 .image(ImageUtil.convertToBase64(image))
                 .createdAt(new Date())
                 .barCode(barCode)
+                .imageBarCode(ImageUtil.convertToBase64(BarcodeUtil.generateCodeBarcode(barCode, name)))
                 .brand(brand_org)
                 .description(description)
                 .build();
         brand_org.getProducts().add(product);
         brandService.addOrSave(brand_org);
         productService.saveOrUpdate(product);
+
+        //quantity
+        Branch branchCurrent = userService.getCurrentUser().getBranch();
+        List<Branch> allBranches = branchService.listAll();
+
+        for (Branch branch : allBranches) {
+            if (branch.equals(branchCurrent)) {
+                QuantityProduct quantityProduct = QuantityProduct.builder()
+                        .branch(branchCurrent)
+                        .product(product)
+                        .quantity(quantity)
+                        .build();
+                quantityProductService.saveOrUpdate(quantityProduct);
+            } else {
+                QuantityProduct quantityProduct = QuantityProduct.builder()
+                        .branch(branch)
+                        .product(product)
+                        .quantity(0)
+                        .build();
+                quantityProductService.saveOrUpdate(quantityProduct);
+            }
+        }
         return "redirect:/products/list";
     }
 
     @GetMapping(value = "/edit/{id}")
     public String showFormEdit(@PathVariable(name = "id") String id, Model model){
         Product product = productService.findById(id);
-        model.addAttribute("product", product);
+        ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+        QuantityProduct quantityProduct = findByProduct(product);
+        productDTO.setQuantityOfBranch(quantityProduct.getQuantity());
+        model.addAttribute("product", productDTO);
         return "/products/page-edit-product";
     }
 
@@ -142,8 +150,15 @@ public class ProductController {
 
         //save barcode
         BarcodeUtil.generateCodeBarcode(barCode, name);
-
         productService.saveOrUpdate(product);
+
+        //quantity
+        QuantityProduct quantityProduct = QuantityProduct.builder()
+                .branch(userService.getCurrentUser().getBranch())
+                .product(product)
+                .quantity(0)
+                .build();
+        quantityProductService.saveOrUpdate(quantityProduct);
         return "redirect:/products/list";
     }
 

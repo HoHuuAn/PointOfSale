@@ -19,6 +19,12 @@ public class ProductDTO {
     @JsonProperty("barCode")
     private String barCode;
 
+    @JsonProperty("ImageBarCode")
+    private String ImageBarCode;
+
+    @JsonProperty("importPrice")
+    private int importPrice;
+
     @JsonProperty("retailPrice")
     private int retailPrice;
 
@@ -26,4 +32,7 @@ public class ProductDTO {
 
     @JsonProperty("brand")
     private BrandDTO brand;
+
+    @JsonProperty("description")
+    private String description;
 }

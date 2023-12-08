@@ -35,7 +35,7 @@
                                         <div class="profile-img-edit">
                                             <div class="crm-profile-img-edit">
                                                 <img class="crm-profile-pic avatar-1000"
-                                                     th:src="@{'/products/' + ${product.getName()} + '/code.jpg'}"
+                                                     th:src="@{'data:image/png;base64,' + ${product.getImageBarCode()}}"
                                                      alt="profile-pic" id="code">
 <!--                                                <div class="crm-p-image bg-primary">-->
 <!--                                                    <i class="las la-pen upload-button"></i>-->
@@ -114,7 +114,7 @@
                                         <div class="form-group">
                                             <label>Quantity *</label>
                                             <input type="text" class="form-control" placeholder="Enter Quantity"
-                                                   data-errors="Please Enter Quantity." name="quantity" th:value="${product.getQuantity()}">
+                                                   data-errors="Please Enter Quantity." name="quantity" th:value="${product.getQuantityOfBranch()}">
                                             <div class="help-block with-errors"></div>
                                         </div>
                                     </div>

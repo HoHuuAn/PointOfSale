@@ -30,7 +30,6 @@ public class CustomerController {
     @ResponseBody
     public ResponseEntity<?> findByPhone(@RequestParam("phone") String phone) {
         Customer customer = customerService.findByPhone(phone);
-        System.out.println(customer);
         CustomerDTO customerDTO = modelMapper.map(customer, CustomerDTO.class);
         if (customer != null) {
             Map<String, Object> response = new HashMap<>();
