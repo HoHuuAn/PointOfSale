@@ -63,5 +63,16 @@ public class ReportController {
 
     }
 
-    
+    private Long calculateTotalSum(List<OrderProduct> orderList) {
+        return orderList.stream()
+                .mapToLong(OrderProduct::getTotalAmount)
+                .sum();
+    }
+
+    private Long calculateTotalProductQuantity(List<OrderProduct> orderList) {
+        return orderList.stream()
+                .flatMap(order -> order.getOrderItems().stream())
+                .mapToLong(OrderDetail::getQuantity)
+                .sum();
+    }
 }
