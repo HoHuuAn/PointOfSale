@@ -49,15 +49,7 @@ public class ProductController {
 
     @GetMapping(value = "/list")
     public String listProduct(Model model){
-        List<ProductDTO> productDTOList = productService.listAll().stream()
-                .map(product -> {
-                    ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
-                    QuantityProduct quantityProduct = findByProduct(product);
-                    productDTO.setQuantityOfBranch(quantityProduct.getQuantity());
-                    return productDTO;
-                })
-                .collect(Collectors.toList());
-        model.addAttribute("listProducts", productDTOList);
+        model.addAttribute("listProducts", productService.listAllDTO());
         return "/products/page-list-product";
     }
 
@@ -155,7 +147,7 @@ public class ProductController {
                        @RequestParam(name = "description") String description) throws IOException {
         //save barcode
         BarcodeUtil.generateCodeBarcode(barCode, name);
-
+        
         Brand brand_org = brandService.findByName(brand);
 
         Product product = productService.findById(id);
@@ -171,6 +163,21 @@ public class ProductController {
         BarcodeUtil.generateCodeBarcode(barCode, name);
 
         productService.saveOrUpdate(product);
+
+
+        //quantity
+        Optional<User> info = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = null;
+        if(info.isPresent()){
+            user = info.get();
+        }
+        assert user != null;
+        QuantityProduct quantityProduct = QuantityProduct.builder()
+                .branch(user.getBranch())
+                .product(product)
+                .quantity(0)
+                .build();
+        quantityProductService.saveOrUpdate(quantityProduct);
         return "redirect:/products/list";
     }
 

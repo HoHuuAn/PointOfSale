@@ -51,15 +51,7 @@ public class SaleController {
 
     @GetMapping(value = "/sales-page")
     public String viewOrder(Model model){
-        List<ProductDTO> productDTOList = productService.listAll().stream()
-                .map(product -> {
-                    ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
-                    QuantityProduct quantityProduct = findByProduct(product);
-                    productDTO.setQuantityOfBranch(quantityProduct.getQuantity());
-                    return productDTO;
-                })
-                .collect(Collectors.toList());
-        model.addAttribute("listProducts", productDTOList);
+        model.addAttribute("listProducts", productService.listAllDTO());
         return "/sales/page-sale";
     }
 

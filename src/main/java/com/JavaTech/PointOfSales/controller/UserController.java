@@ -73,24 +73,7 @@ public class UserController {
                                 @RequestParam("username") String username,
                                 @RequestParam("password") String password,
                                 @RequestParam("active") String active,
-                                @RequestParam("role") String role,
-                                @RequestParam("sendEmail") boolean sendEmail) throws IOException {
-
-        //avatar
-//        String fileName;
-//        if (avatar != null && !avatar.isEmpty()) {
-//            fileName = fullName.trim()+".jpg";
-//            FileUploadUtil.saveFile(fileName, avatar);
-//        } else {
-//            String defaultImageFilePath = "static/assets/images/user/01.jpg";
-//            ClassPathResource resource = new ClassPathResource(defaultImageFilePath);
-//            byte[] defaultImageBytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
-//
-//            MultipartFile defaultImageFile = new MockMultipartFile("default-avatar.png", defaultImageBytes);
-//            fileName = fullName.trim()+".jpg";
-//
-//            FileUploadUtil.saveFile(fileName, defaultImageFile);
-//        }
+                                @RequestParam("role") String role) throws IOException {
 
         if(avatar == null || !avatar.isEmpty()){
             String defaultImageFilePath = "static/assets/images/user/01.jpg";
