@@ -72,7 +72,38 @@ public class SaleController {
         }
     }
 
+    @PostMapping(value = "/checkout")
+    public ResponseEntity<String> addOrder(@RequestBody List<OrderPayload> orderPayloads ){
+        OrderProduct orderProduct = new OrderProduct();
+        for( OrderPayload orderPayload : orderPayloads){
+            //get info product & quantity from payload
+            ProductDTO productDTO = orderPayload.getProduct();
+            int quantity = orderPayload.getQuantity();
 
+            //get origin product
+            Product product = productService.findProductByBarCode(productDTO.getBarCode());
+
+            //subtract quantity and save into database
+            QuantityProduct quantityProduct = findByProduct(product);
+            quantityProduct.setQuantity(quantityProduct.getQuantity() - quantity);
+            productService.saveOrUpdate(product);
+
+            //handle order
+            orderProduct.setTotalAmount( orderProduct.getTotalAmount() + ((long) quantity * product.getRetailPrice()) );
+            OrderDetail orderDetail = OrderDetail.builder()
+                    .order(orderProduct)
+                    .product(product)
+                    .quantity(quantity)
+                    .build();
+
+            orderDetailService.saveOrUpdate(orderDetail);
+            orderProduct.getOrderItems().add(orderDetail);
+        }
+        orderProduct.setBranch(userService.getCurrentUser().getBranch());
+        orderProductService.saveOrUpdate(orderProduct);
+
+        return ResponseEntity.ok("/sales/page-checkout?id=" + orderProduct.getId());
+    }
 
     public QuantityProduct findByProduct(Product product){
         return quantityProductService.findByBranchAndProduct(userService.getCurrentUser().getBranch(), product);
