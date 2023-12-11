@@ -36,5 +36,6 @@ public class Branch {
 
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
+    
     private List<QuantityProduct> quantityProducts;
 }
