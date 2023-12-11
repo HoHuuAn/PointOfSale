@@ -13,7 +13,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +23,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Controller
 @RequestMapping(value = "/sales")
@@ -83,9 +81,13 @@ public class SaleController {
             //get origin product
             Product product = productService.findProductByBarCode(productDTO.getBarCode());
 
+
             //subtract quantity and save into database
             QuantityProduct quantityProduct = findByProduct(product);
             quantityProduct.setQuantity(quantityProduct.getQuantity() - quantity);
+
+            //total sales
+            product.setTotalSales(product.getTotalSales() + quantityProduct.getQuantity());
             productService.saveOrUpdate(product);
 
             //handle order

@@ -20,4 +20,8 @@ public interface ProductService {
     Product findById(String id);
 
     Product findProductByBarCode(String Barcode);
+
+    List<ProductDTO> getTopThreeProductsByTotalSales();
+
+    List<ProductDTO> listDTO( List<Product> list);
 }

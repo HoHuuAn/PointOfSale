@@ -9,6 +9,10 @@ import com.JavaTech.PointOfSales.dto.ProductDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -79,11 +83,12 @@ public class ProductController {
                 .name(name)
                 .importPrice(importPrice)
                 .retailPrice(retailPrice)
-                .image(ImageUtil.convertToBase64(image))
+                .image(image.getBytes())
                 .createdAt(new Date())
                 .barCode(barCode)
                 .imageBarCode(ImageUtil.convertToBase64(BarcodeUtil.generateCodeBarcode(barCode, name)))
                 .brand(brand_org)
+                .totalSales(0)
                 .description(description)
                 .build();
         brand_org.getProducts().add(product);
@@ -114,6 +119,15 @@ public class ProductController {
         return "redirect:/products/list";
     }
 
+    @RequestMapping(value = "/image/{image_id}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getImage(@PathVariable("image_id") String id) throws IOException {
+
+        byte[] imageContent = productService.findById(id).getImage();
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+        return new ResponseEntity<byte[]>(imageContent, headers, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/edit/{id}")
     public String showFormEdit(@PathVariable(name = "id") String id, Model model){
         Product product = productService.findById(id);
@@ -136,7 +150,6 @@ public class ProductController {
                        @RequestParam(name = "description") String description) throws IOException {
         //save barcode
         BarcodeUtil.generateCodeBarcode(barCode, name);
-
         Brand brand_org = brandService.findByName(brand);
 
         Product product = productService.findById(id);
@@ -146,7 +159,7 @@ public class ProductController {
         product.setDescription(description);
         product.setBarCode(barCode);
         product.setBrand(brand_org);
-        product.setImage(ImageUtil.convertToBase64(image));
+        product.setImage(image.getBytes());
 
         //save barcode
         BarcodeUtil.generateCodeBarcode(barCode, name);
@@ -156,7 +169,7 @@ public class ProductController {
         QuantityProduct quantityProduct = QuantityProduct.builder()
                 .branch(userService.getCurrentUser().getBranch())
                 .product(product)
-                .quantity(0)
+                .quantity(quantity)
                 .build();
         quantityProductService.saveOrUpdate(quantityProduct);
         return "redirect:/products/list";

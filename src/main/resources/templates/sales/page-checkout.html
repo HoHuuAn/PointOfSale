@@ -96,7 +96,7 @@
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <img class="img-fluid rounded avatar-80 mr-3 w- h-auto"
-                                                             th:src="@{'data:image/png;base64,' + ${orderItem.product.getImage()}}"
+                                                             th:src="@{'data:image/png;base64,' + ${orderItem.product.getEncodedImage()}}"
                                                              alt="profile-pic">
                                                         <div th:text="${orderItem.getProduct().getName()}"></div>
                                                     </div>
