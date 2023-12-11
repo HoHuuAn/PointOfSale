@@ -18,12 +18,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.getUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not Found with username: " + username));
-        if (!user.isActivated()) {
-            throw new DisabledException("Your account is inactivated");
-        }
         if (!user.isUnlocked()) {
             throw new DisabledException("Your account is locked");
         }
+
+
+        if (!user.isActivated()) {
+            throw new DisabledException("Your account is inactivated");
+        }
+
         String avatar = user.getAvatar();
         return new UserDetailsImpl(user, avatar);
     }

@@ -38,15 +38,20 @@ public class InvoiceGeneratorUtil {
         PdfWriter pdfWriter = new PdfWriter(outputStream);
         PdfDocument pdfDocument = new PdfDocument(pdfWriter);
         pdfDocument.setDefaultPageSize(PageSize.A4);
-
+        String imagePath = "src/main/resources/static/assets/logo.png";
         Document document = new Document(pdfDocument);
 
-        String imagePath = "src/main/resources/static/assets/logo.png";
-        ImageData imageData = ImageDataFactory.create(imagePath);
-        Image image = new Image(imageData);
+
+
 
         float x = pdfDocument.getDefaultPageSize().getWidth()/2;
         float y = pdfDocument.getDefaultPageSize().getHeight()/2;
+
+        ImageData imageData = ImageDataFactory.create(imagePath);
+        Image image = new Image(imageData);
+
+
+
         image.setFixedPosition(x,y);
         image.setOpacity(0.1f);
         document.add(image);

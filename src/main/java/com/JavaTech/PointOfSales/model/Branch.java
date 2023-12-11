@@ -17,15 +17,10 @@ import java.util.List;
 public class Branch {
 
 
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<QuantityProduct> quantityProducts;
 
-
-    @Id
-    @Column(name = "branch_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "name")
-    private String name;
 
     @Column(name = "address")
     private String address;
@@ -38,7 +33,15 @@ public class Branch {
     @JsonManagedReference
     private List<User> users;
 
-    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private List<QuantityProduct> quantityProducts;
+
+
+    @Id
+    @Column(name = "branch_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "name")
+    private String name;
+
+
 }
