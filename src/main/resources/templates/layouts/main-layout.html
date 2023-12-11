@@ -708,6 +708,7 @@
                         $('#total-sales').html(data.totalAmount)
                         $('#product-sold').html(data.totalProduct)
                         $('#orders-sold').html(data.orderList.length)
+                        $('#profit').html(data.profit)
                         showOrder(data.orderList);
                     },
                     error: function () {

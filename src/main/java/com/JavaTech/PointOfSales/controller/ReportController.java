@@ -51,7 +51,7 @@ public class ReportController {
                 DateUtil.getEndOfDay(dateFormat.parse(endDateString)));
         Long totalAmount = calculateTotalSum(orderList);
         Long totalProduct = calculateTotalProductQuantity(orderList);
-
+        Long profit = orderProductService.calculateTotalProfit(orderList);
         List<OrderProductDTO> orderDTOList = orderList.stream()
                 .map(orderProduct -> {
                     OrderProductDTO orderProductDTO = modelMapper.map(orderProduct, OrderProductDTO.class);
@@ -63,6 +63,7 @@ public class ReportController {
         Map<String, Object> response = new HashMap<>();
         response.put("orderList", orderDTOList);
         response.put("totalAmount", totalAmount);
+        response.put("profit", profit);
         response.put("totalProduct", totalProduct);
 
         return ResponseEntity.ok(response);

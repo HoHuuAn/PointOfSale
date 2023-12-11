@@ -14,4 +14,5 @@ public interface OrderProductService {
     OrderProduct findById(Long id);
 
     List<OrderProduct> getOrdersBetweenDates(Date startDate, Date endDate);
+    Long calculateTotalProfit(List<OrderProduct> orderProducts);
 }
