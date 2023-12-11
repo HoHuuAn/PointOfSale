@@ -39,10 +39,10 @@ public class ReportController {
     public ResponseEntity<?> getOrders(@RequestParam("startDate") String startDateString,
                                        @RequestParam("endDate") String endDateString) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
-        Date startDate = dateFormat.parse(startDateString);
-        Date endDate = dateFormat.parse(endDateString);
 
-        List<OrderProduct> orderList = orderProductService.getOrdersBetweenDates(startDate, endDate);
+        List<OrderProduct> orderList = orderProductService.getOrdersBetweenDates(
+                dateFormat.parse(startDateString)
+                ,dateFormat.parse(endDateString));
         Long totalAmount = calculateTotalSum(orderList);
         Long totalProduct = calculateTotalProductQuantity(orderList);
 
@@ -60,7 +60,6 @@ public class ReportController {
         response.put("totalProduct", totalProduct);
 
         return ResponseEntity.ok(response);
-
     }
 
     private Long calculateTotalSum(List<OrderProduct> orderList) {
