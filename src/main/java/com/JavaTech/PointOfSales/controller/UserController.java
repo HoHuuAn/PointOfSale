@@ -116,7 +116,6 @@ public class UserController {
 
         //send
         sendMail(user);
-
         return "redirect:/user/list";
     }
 
@@ -219,7 +218,7 @@ public class UserController {
         User user = userRepository.getUserByUsername(username).orElseThrow();
         user.setPassword(passwordEncoder.encode(password));
         userService.saveOrUpdate(user);
-        return "redirect:/user/profile/" + user.getUsername();
+        return "redirect:/user/profile";
     }
 
     @PostMapping("/changelock/{username}")

@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -159,18 +160,17 @@ public class ProductController {
         product.setDescription(description);
         product.setBarCode(barCode);
         product.setBrand(brand_org);
-        product.setImage(image.getBytes());
+        if (!image.isEmpty()) {
+            product.setImage(image.getBytes());
+        }
 
         //save barcode
         BarcodeUtil.generateCodeBarcode(barCode, name);
         productService.saveOrUpdate(product);
 
         //quantity
-        QuantityProduct quantityProduct = QuantityProduct.builder()
-                .branch(userService.getCurrentUser().getBranch())
-                .product(product)
-                .quantity(quantity)
-                .build();
+        QuantityProduct quantityProduct = quantityProductService.findByBranchAndProduct(userService.getCurrentUser().getBranch(), product);
+        quantityProduct.setQuantity(quantity);
         quantityProductService.saveOrUpdate(quantityProduct);
         return "redirect:/products/list";
     }
