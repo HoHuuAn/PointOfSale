@@ -126,7 +126,27 @@ public class InvoiceGeneratorUtil {
         threeColTable4.addCell(new Cell().add(divider2).setBorder(com.itextpdf.layout.border.Border.NO_BORDER));
         document.add(threeColTable4);
 
-        
+        //====================================total amount====================================
+        Table threeColTable3 = new Table(threecolumnWidth);
+        threeColTable3.addCell(new Cell().add("").setBorder(com.itextpdf.layout.border.Border.NO_BORDER)).setMarginLeft(10f);
+        threeColTable3.addCell(new Cell().add("Total").setTextAlignment(TextAlignment.CENTER).setBorder(com.itextpdf.layout.border.Border.NO_BORDER));
+        threeColTable3.addCell(new Cell().add(String.valueOf(orderProduct.getTotalAmount())).setTextAlignment(TextAlignment.RIGHT).setBorder(com.itextpdf.layout.border.Border.NO_BORDER)).setMarginRight(15f);
+        document.add(threeColTable3);
+
+        document.add(threeColTable4);
+        //====================================cash====================================
+        Table threeColTable5 = new Table(threecolumnWidth);
+        threeColTable5.addCell(new Cell().add("").setBorder(com.itextpdf.layout.border.Border.NO_BORDER)).setMarginLeft(10f);
+        threeColTable5.addCell(new Cell().add("Cash").setTextAlignment(TextAlignment.CENTER).setBorder(com.itextpdf.layout.border.Border.NO_BORDER));
+        threeColTable5.addCell(new Cell().add(String.valueOf(orderProduct.getCash())).setTextAlignment(TextAlignment.RIGHT).setBorder(com.itextpdf.layout.border.Border.NO_BORDER)).setMarginRight(15f);
+        document.add(threeColTable5);
+
+        document.add(threeColTable4);
+        //====================================change====================================
+        Table threeColTable6 = new Table(threecolumnWidth);
+        threeColTable6.addCell(new Cell().add("").setBorder(com.itextpdf.layout.border.Border.NO_BORDER)).setMarginLeft(10f);
+        threeColTable6.addCell(new Cell().add("Change").setTextAlignment(TextAlignment.CENTER).setBorder(com.itextpdf.layout.border.Border.NO_BORDER));
+        threeColTable6.addCell(new Cell().add(String.valueOf(orderProduct.getCash() - orderProduct.getTotalAmount())).setTextAlignment(TextAlignment.RIGHT).setBorder(com.itextpdf.layout.border.Border.NO_BORDER)).setMarginRight(15f);
         document.add(threeColTable6);
 
         document.add(divider2);
