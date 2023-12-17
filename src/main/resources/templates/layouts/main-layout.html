@@ -904,10 +904,17 @@
             const circle = document.getElementById(id);
             // const progressBars = circle.querySelectorAll('.progress-bar');
             const progressValue = circle.querySelector('.progress-value');
-            const productSold = document.getElementById('productSold');
-            productSold.innerHTML = numerator.toString() + ' / ' + denominator.toString();
+            let fraction = null;
+            if( id.includes("ProductSold")) {
+                fraction = document.getElementById('productSold');
+            }
+            if( id.includes("LoyalCustomer")) {
+                fraction = document.getElementById('loyalCustomer');
+            }
 
-            const percent =  (Math.floor((numerator / denominator) * 10000) / 100).toFixed(2);
+            fraction.innerHTML = numerator.toString() + ' / ' + denominator.toString();
+
+            const percent =  (Math.floor((numerator / denominator) * 10000) / 100).toFixed(1);
             circle.setAttribute('data-percent', percent);
 
             progressValue.textContent = percent + '%';
@@ -924,9 +931,16 @@
             progressRight.style.animation = 'progress-loading-1 1.8s linear forwards';
         }
 
+        // product sold
         const sumQuantityInInventory = [[${sumQuantityInInventory}]];
         const sumQuantitySold = [[${sumQuantitySold}]];
-        setCircleProgress(sumQuantitySold, sumQuantityInInventory, 'circleProgressProductSold');
+        setCircleProgress(sumQuantitySold, sumQuantityInInventory, 'circleProductSold');
+
+        // loyal customer
+        const sumCustomerBuyTwoTimes = [[${sumCustomerBuyTwoTimes}]];
+        const sumCustomer = [[${sumCustomer}]];
+        setCircleProgress(sumCustomerBuyTwoTimes, sumCustomer, 'circleLoyalCustomer');
+
     </script>
 </body>
 </html>

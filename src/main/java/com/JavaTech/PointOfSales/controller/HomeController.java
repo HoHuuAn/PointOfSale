@@ -3,6 +3,7 @@ package com.JavaTech.PointOfSales.controller;
 import com.JavaTech.PointOfSales.model.QuantityProduct;
 import com.JavaTech.PointOfSales.model.User;
 import com.JavaTech.PointOfSales.repository.UserRepository;
+import com.JavaTech.PointOfSales.service.CustomerService;
 import com.JavaTech.PointOfSales.service.OrderProductService;
 import com.JavaTech.PointOfSales.service.ProductService;
 import com.JavaTech.PointOfSales.service.QuantityProductService;
@@ -35,6 +36,9 @@ public class HomeController {
     @Autowired
     private OrderProductService orderProductService;
 
+    @Autowired
+    private CustomerService customerService;
+
     @GetMapping(value = "/")
     public String index(Model model){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -61,8 +65,13 @@ public class HomeController {
         model.addAttribute("amounts", amounts);
 
         //progress circle
+        //percentage product sold
         model.addAttribute("sumQuantityInInventory", quantityProductService.sumQuantityByBranch(user.getBranch()));
         model.addAttribute("sumQuantitySold", orderProductService.sumQuantityByBranch(user.getBranch()));
+
+        //percentage loyal customer
+        model.addAttribute("sumCustomerBuyTwoTimes", orderProductService.countCustomersWithMultipleOrders());
+        model.addAttribute("sumCustomer", customerService.listAll().size());
 
         model.addAttribute("top3Products", productService.getTopThreeProductsByTotalSales());
         return "index";
