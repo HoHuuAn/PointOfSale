@@ -110,8 +110,7 @@ public class UserController {
                 .branch(branch)
                 .password(passwordEncoder.encode(password))
                 .activated(Objects.equals(active, "Active"))
-                .roles(roles)
-                .build();
+                .roles(roles).build();
         userService.saveOrUpdate(user);
 
         //send
