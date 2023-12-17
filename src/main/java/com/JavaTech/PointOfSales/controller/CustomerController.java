@@ -51,6 +51,10 @@ public class CustomerController {
                     .phone(phone)
                     .name(name)
                     .address(address).build());
+        }else{
+            customer.setName(name);
+            customer.setAddress(address);
+            customerService.saveOrUpdate(customer);
         }
         CustomerDTO customerDTO = modelMapper.map(customerService.findByPhone(phone), CustomerDTO.class);
         Map<String, Object> response = new HashMap<>();

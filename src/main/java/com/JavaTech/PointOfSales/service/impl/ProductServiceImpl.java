@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -84,5 +85,31 @@ public class ProductServiceImpl implements ProductService {
     public Product findProductByBarCode(String barcode) {
         Optional<Product> product = productRepository.findProductByBarCode(barcode);
         return product.orElse(null);
+    }
+
+    @Override
+    public List<ProductDTO> getTopThreeProductsByTotalSales() {
+        // Retrieve all products from the repository
+        List<Product> products = productRepository.findAll();
+
+        // Sort the products by their total sales in descending order
+        List<Product> list = products.stream()
+                .sorted(Comparator.comparingInt(Product::getTotalSales).reversed())
+                .limit(3)
+                .collect(Collectors.toList());
+
+        return listDTO(list);
+    }
+
+    @Override
+    public List<ProductDTO> listDTO( List<Product> list) {
+        return list.stream()
+                .map(product -> {
+                    ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+                    QuantityProduct quantityProduct = findByProduct(product);
+                    productDTO.setQuantityOfBranch(quantityProduct.getQuantity());
+                    return productDTO;
+                })
+                .collect(Collectors.toList());
     }
 }

@@ -2,7 +2,7 @@
 <html lang="en"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -48,7 +48,7 @@
                 <nav class="iq-sidebar-menu">
                     <ul id="iq-sidebar-toggle" class="iq-menu">
                         <li class="active">
-                            <a href="" class="svg-icon">
+                            <a th:href="@{/}" class="svg-icon">
                                 <svg class="svg-icon" id="p-dash1" width="20" height="20"
                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -644,7 +644,7 @@
     <script th:src="@{/assets/js/customizer.js}"></script>
 
     <!-- Chart Custom JavaScript -->
-    <script async th:src="@{/assets/js/chart-custom.js}"></script>
+<!--    <script async th:src="@{/assets/js/chart-custom.js}"></script>-->
 
     <!-- app JavaScript -->
     <script th:src="@{/assets/js/app.js}"></script>
@@ -705,9 +705,10 @@
                     },
                     success: function (data) {
                         console.log(data)
-                        $('#total-sales').html(data.totalAmount)
+                        $('#total-sales').html("$ " + data.totalAmount)
                         $('#product-sold').html(data.totalProduct)
                         $('#orders-sold').html(data.orderList.length)
+                        $('#profit').html("$ " +data.profit)
                         showOrder(data.orderList);
                     },
                     error: function () {
@@ -742,7 +743,7 @@
                 var totalQuantity = order.orderItems.reduce((acc, item) => acc + item.quantity, 0);
 
                 newRow.innerHTML = `
-                                        <td>${order.id}</td>
+<!--                                        <td>${order.id}</td>-->
                                         <td>${order.nameOfCustomer}</td>
                                         <td>${order.totalAmount}</td>
                                         <td>${order.cash}</td>
@@ -752,7 +753,7 @@
                                         <td>
                                             <div class="d-flex align-items-center list-action">
                                                             <button type="button" class="btn btn-primary mt-2" data-toggle="modal" data-target=".bd-example-modal-xl"><i
-                                                                    class="ri-eye-line mr-0"></i> View Details</button>
+                                                                    class="ri-eye-line mr-0"></i></button>
                                                              <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-hidden="true">
                                                                 <div class="modal-dialog modal-xl">
                                                                     <div class="modal-content">
@@ -814,7 +815,82 @@
                 });
             })
         }
+
+
+
     </script>
 
+    <!--    chart in home-->
+    <script th:inline="javascript">
+        options = {
+            series: [{
+                name: 'Total Revenue',
+                data: [ ]
+            }],
+            chart: {
+                type: 'bar',
+                height: 350
+            },
+            colors: ['#32BDEA', '#FF7E41'],
+            plotOptions: {
+                bar: {
+                    horizontal: true,
+                    columnWidth: '30%',
+                    endingShape: 'rounded'
+                },
+            },
+            dataLabels: {
+                enabled: true
+            },
+            stroke: {
+                show: true,
+                width: 3,
+                colors: ['transparent']
+            },
+            xaxis: {
+                categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                labels: {
+                    minWidth: 0,
+                    maxWidth: 0
+                }
+            },
+            yaxis: {
+                show: true,
+                labels: {
+                    formatter: function (val) {
+                        return val;
+                    }
+                }
+            },
+            fill: {
+                opacity: 1
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return "$ " + val
+                    }
+                }
+            }
+        };
+        const months = /*[[${months}]]*/ [];
+        const data = /*[[${amounts}]]*/ [];
+        options.series[0].data = data;
+        options.xaxis.categories = months;
+
+        const chart = new ApexCharts(document.querySelector("#layout1-chart-5"), options);
+        chart.render();
+
+        const body = document.querySelector('body');
+        if (body.classList.contains('dark')) {
+            apexChartUpdate(chart, {
+                dark: true
+            });
+        }
+
+        document.addEventListener('ChangeColorMode', function (e) {
+            apexChartUpdate(chart, e.detail);
+        });
+    </script>
 </body>
 </html>

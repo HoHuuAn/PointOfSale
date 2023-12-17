@@ -95,18 +95,17 @@
                                     <div class="row">
                                         <div th:each="product:${listProducts}" class="col-sm-6 col-md-6 col-lg-3">
                                             <div class="card">
-                                                <img th:src="@{'data:image/png;base64,' + ${product.getImage()}}" class="card-img-top"
+                                                <img th:src="'data:image/jpeg;base64,' + ${product.getEncodedImage()}" class="card-img-top w-100"
                                                      alt="#">
                                                 <div class="card-body">
                                                     <h4 class="card-title" th:text="${product.getName()}"></h4>
-                                                    <p class="card-text" th:utext="${'Price: ' + product.getRetailPrice() + '<br>Code: ' + product.getBarCode()}"></p>
+                                                    <p class="card-text" th:utext="${'Price: ' + product.getRetailPrice() + '<br>Code: ' + product.getBarCode() + '<br>In Stock: ' + product.getQuantityOfBranch()}"></p>
                                                     <div th:if="${product.getQuantityOfBranch()  > 0 }">
                                                         <a href="#" class="btn btn-primary" th:attr="onclick='addProduct(\'' + ${product.getBarCode()} + '\')'">Add</a>
                                                     </div>
                                                     <div th:if="${product.getQuantityOfBranch()  == 0 }">
                                                         <button disabled class="btn btn-light">Sold out</button>
                                                     </div>
-
                                                 </div>
                                             </div>
                                         </div>
@@ -360,7 +359,7 @@
                 xhr.setRequestHeader(header, token);
             },
             success: function (data) {
-                sessionStorage.setItem('data', JSON.stringify(data));
+                localStorage.setItem('data', JSON.stringify(data));
                 displayCustomerInfo(data)
             },
             error: function () {
@@ -371,15 +370,15 @@
     $('#phoneInput').on('change', function () {
         fetchCustomerData();
     });
-    // Check if there's data in sessionStorage when the page loads
+    // Check if there's data in localStorage when the page loads
     document.addEventListener('DOMContentLoaded', function () {
-        var sessesionData = sessionStorage.getItem('data');
+        var sessesionData = localStorage.getItem('data');
 
         if (sessesionData) {
             var data = JSON.parse(sessesionData);
             displayCustomerInfo(data)
         }
-        sessesionData = sessionStorage.getItem('dataOrder');
+        sessesionData = localStorage.getItem('dataOrder');
 
         if (sessesionData) {
             var dataOrder = JSON.parse(sessesionData);
@@ -395,7 +394,7 @@
         $('.phone-display').val(data.customer.phone);
         $('.name-display').val(data.customer.name);
         $('.address-display').val(data.customer.address);
-        
+
         // console.log(data)
 
         var orderList = data.customer.orderProduct
@@ -516,7 +515,7 @@
             $('#phoneInput').val('');
             $('#nameInput').val('');
             $('#addressInput').val('');
-            sessionStorage.removeItem('data');
+            localStorage.removeItem('data');
         })
     });
     function notifyCreate(phone) {
@@ -547,10 +546,12 @@
                 xhr.setRequestHeader(header, token);
             },
             success: function (data) {
-                console.log(data)
-                var sessionData = sessionStorage.getItem('dataOrder');
+                // console.log(data)
+                var sessionData = localStorage.getItem('dataOrder');
                 var productList = [];
-                if (data.product.quantityOfBranch > 0){
+                var quantityCurrent  = (typeof $(`#quantity-${data.product.name.replaceAll(' ', '-')}`).val() === 'undefined') ? 0 : $(`#quantity-${data.product.name.replaceAll(' ', '-')}`).val()
+                console.log(quantityCurrent)
+                if (data.product.quantityOfBranch - quantityCurrent > 0){
                     if (sessionData) {
                         productList = JSON.parse(sessionData);
                     }
@@ -571,7 +572,7 @@
                         productList.push(product);
                     }
                     // Update the session storage with the modified product list
-                    sessionStorage.setItem('dataOrder', JSON.stringify(productList));
+                    localStorage.setItem('dataOrder', JSON.stringify(productList));
                     updateCash()
                 }
                 else {
@@ -586,10 +587,10 @@
     }
     function notifyLoadProductFail(barcode, message) {
         $('#loadProductFail strong').html(barcode + message)
-        $('#loadProductFail').fadeTo(2000, 1)
+        $('#loadProductFail').fadeTo(500, 1)
         setTimeout(() => {
             $('#loadProductFail').fadeTo(2000, 0)
-        }, 4000);
+        }, 500);
     }
     //==========================================================Order Details==========================================================
     function addProductToCart(product){
@@ -631,8 +632,8 @@
 
     }
     function removeTableRow(row, productName) {
-        // Retrieve the dataOrder from sessionStorage
-        var sessionData = sessionStorage.getItem('dataOrder');
+        // Retrieve the dataOrder from localStorage
+        var sessionData = localStorage.getItem('dataOrder');
         if (sessionData) {
             var dataOrder = JSON.parse(sessionData);
 
@@ -642,8 +643,8 @@
                 // Remove the product from dataOrder at the found index
                 dataOrder.splice(indexToRemove, 1);
 
-                // Update sessionStorage with the modified dataOrder
-                sessionStorage.setItem('dataOrder', JSON.stringify(dataOrder));
+                // Update localStorage with the modified dataOrder
+                localStorage.setItem('dataOrder', JSON.stringify(dataOrder));
             }
         }
         row.remove();
@@ -698,7 +699,7 @@
         });
     }
     function updateCash(){
-        var sessionData = sessionStorage.getItem('dataOrder');
+        var sessionData = localStorage.getItem('dataOrder');
         if (sessionData) {
             var dataOrder = JSON.parse(sessionData);
             if (dataOrder && dataOrder.length > 0) {
@@ -735,7 +736,7 @@
         }
     }
     function updateQuantityInSessionStorage(productName, newQuantity) {
-        var sessionData = sessionStorage.getItem('dataOrder');
+        var sessionData = localStorage.getItem('dataOrder');
         if (sessionData) {
             var dataOrder = JSON.parse(sessionData);
             // Find the index of the product in dataOrder
@@ -743,24 +744,23 @@
             if (productIndex !== -1) {
                 // Update the quantity of the found product
                 dataOrder[productIndex].quantity = newQuantity;
-                // Update sessionStorage with the modified dataOrder
-                sessionStorage.setItem('dataOrder', JSON.stringify(dataOrder));
+                // Update localStorage with the modified dataOrder
+                localStorage.setItem('dataOrder', JSON.stringify(dataOrder));
             }
             showProductOrder(dataOrder)
         }
     }
     function resetOrder(){
-        sessionStorage.removeItem('dataOrder');
+        localStorage.removeItem('dataOrder');
         var tableBody = document.getElementById('table-body-orders-cart');
         tableBody.innerHTML = ''
         $('#order-detail-cash strong').html(0);
     }
-    resetOrder()
     //==========================================================Check out==========================================================
     document.addEventListener("DOMContentLoaded", function() {
         const checkoutButton = document.querySelector('#checkout');
         checkoutButton.addEventListener('click', function() {
-            var sessionData = sessionStorage.getItem('dataOrder');
+            var sessionData = localStorage.getItem('dataOrder');
             if (sessionData) {
                 var dataOrder = JSON.parse(sessionData);
                 console.log(dataOrder)
@@ -782,7 +782,6 @@
                         }
                     },
                     error: function () {
-
                     }
                 });
             }
