@@ -644,7 +644,6 @@
     <script th:src="@{/assets/js/customizer.js}"></script>
 
     <!-- Chart Custom JavaScript -->
-<!--    <script async th:src="@{/assets/js/chart-custom.js}"></script>-->
 
     <!-- app JavaScript -->
     <script th:src="@{/assets/js/app.js}"></script>
@@ -687,6 +686,8 @@
             passwordInput.value = username;
         }
     </script>
+
+<!-- ====================select date for report====================-->
     <script type="text/javascript">
         $(function () {
             var start = moment().subtract(29, 'days');
@@ -815,12 +816,10 @@
                 });
             })
         }
-
-
-
     </script>
 
-    <!--    chart in home-->
+
+    <!--====================chart in home====================-->
     <script th:inline="javascript">
         options = {
             series: [{
@@ -834,13 +833,13 @@
             colors: ['#32BDEA', '#FF7E41'],
             plotOptions: {
                 bar: {
-                    horizontal: true,
+                    horizontal: false,
                     columnWidth: '30%',
                     endingShape: 'rounded'
                 },
             },
             dataLabels: {
-                enabled: true
+                enabled: false
             },
             stroke: {
                 show: true,
@@ -891,6 +890,43 @@
         document.addEventListener('ChangeColorMode', function (e) {
             apexChartUpdate(chart, e.detail);
         });
+    </script>
+
+
+    <script>
+        function setRotationValues(rotation1, rotation2, id) {
+            const style = document.getElementById(id).style;
+            style.setProperty('--rotate-value-1', `${rotation1}deg`);
+            style.setProperty('--rotate-value-2', `${rotation2}deg`);
+        }
+
+        function setCircleProgress( numerator ,denominator, id) {
+            const circle = document.getElementById(id);
+            // const progressBars = circle.querySelectorAll('.progress-bar');
+            const progressValue = circle.querySelector('.progress-value');
+            const productSold = document.getElementById('productSold');
+            productSold.innerHTML = numerator.toString() + ' / ' + denominator.toString();
+
+            const percent =  (Math.floor((numerator / denominator) * 10000) / 100).toFixed(2);
+            circle.setAttribute('data-percent', percent);
+
+            progressValue.textContent = percent + '%';
+            const rotation = (360 * percent) / 100;
+
+            const rotation1 = rotation > 180 ? 180 : rotation;
+            const rotation2 = rotation > 180 ? rotation - 180 : 0;
+
+            setRotationValues(rotation1, rotation2, id);
+
+            const progressLeft = circle.querySelector('.progress-left .progress-bar');
+            const progressRight = circle.querySelector('.progress-right .progress-bar');
+            progressLeft.style.animation = 'progress-loading-2 1.8s linear forwards 1.8s';
+            progressRight.style.animation = 'progress-loading-1 1.8s linear forwards';
+        }
+
+        const sumQuantityInInventory = [[${sumQuantityInInventory}]];
+        const sumQuantitySold = [[${sumQuantitySold}]];
+        setCircleProgress(sumQuantitySold, sumQuantityInInventory, 'circleProgressProductSold');
     </script>
 </body>
 </html>

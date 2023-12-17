@@ -1,9 +1,11 @@
 package com.JavaTech.PointOfSales.controller;
 
+import com.JavaTech.PointOfSales.model.QuantityProduct;
 import com.JavaTech.PointOfSales.model.User;
 import com.JavaTech.PointOfSales.repository.UserRepository;
 import com.JavaTech.PointOfSales.service.OrderProductService;
 import com.JavaTech.PointOfSales.service.ProductService;
+import com.JavaTech.PointOfSales.service.QuantityProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -28,6 +30,9 @@ public class HomeController {
     private ProductService productService;
 
     @Autowired
+    private QuantityProductService quantityProductService;
+
+    @Autowired
     private OrderProductService orderProductService;
 
     @GetMapping(value = "/")
@@ -49,11 +54,15 @@ public class HomeController {
             Long sum = entry.getValue();
             months.add(month);
             amounts.add(sum);
-            System.out.println("Month: " + month + ", Total Amount: " + sum);
         }
 
+        //chart
         model.addAttribute("months", months);
         model.addAttribute("amounts", amounts);
+
+        //progress circle
+        model.addAttribute("sumQuantityInInventory", quantityProductService.sumQuantityByBranch(user.getBranch()));
+        model.addAttribute("sumQuantitySold", orderProductService.sumQuantityByBranch(user.getBranch()));
 
         model.addAttribute("top3Products", productService.getTopThreeProductsByTotalSales());
         return "index";

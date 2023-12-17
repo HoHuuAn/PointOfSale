@@ -7,4 +7,5 @@ import com.JavaTech.PointOfSales.model.QuantityProduct;
 public interface QuantityProductService {
     QuantityProduct saveOrUpdate(QuantityProduct quantityProduct);
     QuantityProduct findByBranchAndProduct(Branch branch, Product product);
+    int sumQuantityByBranch(Branch branch);
 }
