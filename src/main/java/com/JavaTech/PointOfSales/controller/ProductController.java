@@ -1,12 +1,11 @@
 package com.JavaTech.PointOfSales.controller;
 
 
+import com.JavaTech.PointOfSales.dto.ProductDTO;
 import com.JavaTech.PointOfSales.model.*;
-import com.JavaTech.PointOfSales.security.service.*;
 import com.JavaTech.PointOfSales.service.*;
 import com.JavaTech.PointOfSales.utils.BarcodeUtil;
 import com.JavaTech.PointOfSales.utils.ImageUtil;
-import com.JavaTech.PointOfSales.dto.ProductDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,11 +20,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.springframework.beans.factory.support.InstanceSupplier.using;
-
 @Controller
 @RequestMapping("/products")
 public class ProductController {
+
+
+
+
+
+
 
     @Autowired
     private UserService userService;
@@ -44,7 +47,6 @@ public class ProductController {
 
     @Autowired
     private QuantityProductService quantityProductService;
-
     @GetMapping(value = "/list")
     public String listProduct(Model model){
         List<ProductDTO> productDTOList = productService.listAll().stream()
@@ -177,4 +179,7 @@ public class ProductController {
         productService.deleteById(id);
         return "redirect:/products/list";
     }
+
+
+
 }

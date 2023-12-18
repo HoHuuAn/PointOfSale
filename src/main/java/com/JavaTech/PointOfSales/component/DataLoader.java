@@ -57,19 +57,6 @@ public class DataLoader implements CommandLineRunner {
         byte[] defaultImageBytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
         MultipartFile avatar = new MockMultipartFile("default-avatar.png", defaultImageBytes);
 
-        if(userRepository.getUserByUsername("admin1").isEmpty()){
-            User admin1 = User.builder()
-                    .username("admin1")
-                    .password(passwordEncoder.encode("admin1"))
-                    .activated(true)
-                    .unlocked(true)
-                    .avatar(ImageUtil.convertToBase64(avatar))
-                    .firstLogin(false)
-                    .branch(branchRepository.findBranchByName("Branch 1").orElseThrow())
-                    .build();
-            userRepository.save(admin1);
-            userRepository.addUserRole(admin1.getId(), 1L);
-        }
 
         if(userRepository.getUserByUsername("admin2").isEmpty()){
             User admin2 = User.builder()
@@ -84,6 +71,25 @@ public class DataLoader implements CommandLineRunner {
             userRepository.save(admin2);
             userRepository.addUserRole(admin2.getId(), 1L);
         }
+
+
+
+
+
+        if(userRepository.getUserByUsername("admin1").isEmpty()){
+            User admin1 = User.builder()
+                    .username("admin1")
+                    .password(passwordEncoder.encode("admin1"))
+                    .activated(true)
+                    .unlocked(true)
+                    .avatar(ImageUtil.convertToBase64(avatar))
+                    .firstLogin(false)
+                    .branch(branchRepository.findBranchByName("Branch 1").orElseThrow())
+                    .build();
+            userRepository.save(admin1);
+            userRepository.addUserRole(admin1.getId(), 1L);
+        }
+
 
         defaultImageFilePath = "static/assets/images/user/01.jpg";
         resource = new ClassPathResource(defaultImageFilePath);
@@ -120,6 +126,10 @@ public class DataLoader implements CommandLineRunner {
 
         defaultImageFilePath = "static/brands/Apple/Apple.jpg";
         resource = new ClassPathResource(defaultImageFilePath);
+
+
+
+
         defaultImageBytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
         avatar = new MockMultipartFile("default-avatar.png", defaultImageBytes);
 
@@ -131,6 +141,8 @@ public class DataLoader implements CommandLineRunner {
                     .build();
             brandRepository.save(apple);
         }
+
+
 
         defaultImageFilePath = "static/brands/Samsung/Samsung.jpg";
         resource = new ClassPathResource(defaultImageFilePath);

@@ -15,6 +15,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    @GetMapping("/login")
+    public String login() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            return "/authentication/auth-sign-in";
+        }
+        return "redirect:/";
+    }
+
+
+
+
     @Autowired
     UserRepository userRepository;
 
@@ -24,13 +36,5 @@ public class AuthController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @GetMapping("/login")
-    public String login() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-            return "/authentication/auth-sign-in";
-        }
-        return "redirect:/";
-    }
 }
 

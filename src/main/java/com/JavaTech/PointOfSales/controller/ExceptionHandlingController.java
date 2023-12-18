@@ -10,6 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class ExceptionHandlingController implements org.springframework.boot.web.servlet.error.ErrorController{
 
+
+
+    @RequestMapping("/access-denied")
+    public String denied(){
+        return "/error/pages-error-403";
+    }
+
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request, Model model) {
         Integer statusCode = (Integer) request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
@@ -27,10 +34,5 @@ public class ExceptionHandlingController implements org.springframework.boot.web
         // Default error handling
         model.addAttribute("errorMessage", "An error occurred");
         return "/error/pages-error-default";
-    }
-
-    @RequestMapping("/access-denied")
-    public String denied(){
-        return "/error/pages-error-403";
     }
 }
