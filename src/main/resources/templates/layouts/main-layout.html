@@ -906,7 +906,7 @@
             const progressValue = circle.querySelector('.progress-value');
             let fraction = null;
             if( id.includes("ProductSold")) {
-                fraction = document.getElementById('productSold');
+                fraction = document.getElementById('inventory');
             }
             if( id.includes("LoyalCustomer")) {
                 fraction = document.getElementById('loyalCustomer');
@@ -934,7 +934,7 @@
         // product sold
         const sumQuantityInInventory = [[${sumQuantityInInventory}]];
         const sumQuantitySold = [[${sumQuantitySold}]];
-        setCircleProgress(sumQuantitySold, sumQuantityInInventory, 'circleProductSold');
+        setCircleProgress(sumQuantityInInventory - sumQuantitySold, sumQuantityInInventory, 'circleProductSold');
 
         // loyal customer
         const sumCustomerBuyTwoTimes = [[${sumCustomerBuyTwoTimes}]];
