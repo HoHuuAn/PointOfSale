@@ -16,13 +16,6 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws ServletException, IOException {
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-        if( userDetails.isFirstLogin() ){
-            System.out.println("The user " + userDetails.getAuthorities() + " has logged in.");
-            response.sendRedirect("/change-password-first-time");
-        } else {
-            response.sendRedirect("/");
-        }
+       
     }
 }
