@@ -19,4 +19,8 @@ public interface OrderProductService {
     Long calculateTotalProfit(List<OrderProduct> orderProducts);
 
     Map<String, Long> getSumTotalAmountByMonth(Branch branch);
+
+    int sumQuantityByBranch(Branch branch);
+
+    int countCustomersWithMultipleOrders();
 }

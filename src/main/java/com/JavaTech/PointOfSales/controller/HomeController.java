@@ -1,9 +1,12 @@
 package com.JavaTech.PointOfSales.controller;
 
+import com.JavaTech.PointOfSales.model.QuantityProduct;
 import com.JavaTech.PointOfSales.model.User;
 import com.JavaTech.PointOfSales.repository.UserRepository;
+import com.JavaTech.PointOfSales.service.CustomerService;
 import com.JavaTech.PointOfSales.service.OrderProductService;
 import com.JavaTech.PointOfSales.service.ProductService;
+import com.JavaTech.PointOfSales.service.QuantityProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -28,7 +31,13 @@ public class HomeController {
     private ProductService productService;
 
     @Autowired
+    private QuantityProductService quantityProductService;
+
+    @Autowired
     private OrderProductService orderProductService;
+
+    @Autowired
+    private CustomerService customerService;
 
     @GetMapping(value = "/")
     public String index(Model model){
@@ -49,11 +58,20 @@ public class HomeController {
             Long sum = entry.getValue();
             months.add(month);
             amounts.add(sum);
-            System.out.println("Month: " + month + ", Total Amount: " + sum);
         }
 
+        //chart
         model.addAttribute("months", months);
         model.addAttribute("amounts", amounts);
+
+        //progress circle
+        //percentage product sold
+        model.addAttribute("sumQuantityInInventory", quantityProductService.sumQuantityByBranch(user.getBranch()));
+        model.addAttribute("sumQuantitySold", orderProductService.sumQuantityByBranch(user.getBranch()));
+
+        //percentage loyal customer
+        model.addAttribute("sumCustomerBuyTwoTimes", orderProductService.countCustomersWithMultipleOrders());
+        model.addAttribute("sumCustomer", customerService.listAll().size());
 
         model.addAttribute("top3Products", productService.getTopThreeProductsByTotalSales());
         return "index";

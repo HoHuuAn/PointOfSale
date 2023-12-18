@@ -35,8 +35,41 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-      
-                
+        http
+                .authorizeHttpRequests(auth ->
+                        auth.requestMatchers("/static/**").permitAll()
+                                .requestMatchers("/assets/**").permitAll()
+                                .requestMatchers("/user-photos/**").permitAll()
+                                .requestMatchers("/customers/**").permitAll()
+                                .requestMatchers("/user/confirm-account").permitAll()
+                                .requestMatchers("/api/test/admin").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/api/test/user").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                                .anyRequest().authenticated())
+
+
+                .formLogin(formlogin -> formlogin
+                                .loginPage("/api/auth/login")
+                                .loginProcessingUrl("/j_spring_security_login")
+                                .usernameParameter("username")
+                                .passwordParameter("password")
+                                .permitAll()
+//                        .failureForwardUrl("/api/auth/login_fail")
+//                        .defaultSuccessUrl("/", true)
+                                .successHandler(loginSuccessHandler)
+                )
+
+                .logout((logout) ->
+                        logout.deleteCookies("remove")
+                                .invalidateHttpSession(false)
+                                .logoutUrl("/logout")
+                                .logoutSuccessUrl("/api/auth/login")
+                                .permitAll())
+                .rememberMe(rm ->
+                        rm.tokenValiditySeconds(7 * 24 * 60 * 60)
+                                .key("AbcdefghiJklmNoPqRstUvXyz"))
+                .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedPage("/access-denied"));
+
+        http.authenticationProvider(authenticationProvider());
         return http.build();
     }
 

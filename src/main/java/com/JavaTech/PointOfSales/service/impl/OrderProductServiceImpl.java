@@ -79,4 +79,14 @@ public class OrderProductServiceImpl implements OrderProductService {
         }
         return sumByMonth;
     }
+
+    @Override
+    public int sumQuantityByBranch(Branch branch) {
+        return orderProductRepository.sumQuantityByBranch(branch);
+    }
+
+    @Override
+    public int countCustomersWithMultipleOrders() {
+        return orderProductRepository.countCustomersWithMultipleOrders();
+    }
 }

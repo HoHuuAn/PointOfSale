@@ -44,11 +44,11 @@ public class DataLoader implements CommandLineRunner {
             roleRepository.save(new Role(ERole.ROLE_USER));
         }
 
-        if (branchRepository.findBranchByNameAndAddress("Branch 1", "District 1").isEmpty()) {
+        if (branchRepository.findBranchByName("Branch 1").isEmpty()) {
             branchRepository.save(Branch.builder().name("Branch 1").address("District 1").createdAt(new Date()).build());
         }
 
-        if (branchRepository.findBranchByNameAndAddress("Branch 2", "District 2").isEmpty()) {
+        if (branchRepository.findBranchByName("Branch 2").isEmpty()) {
             branchRepository.save(Branch.builder().name("Branch 2").address("District 2").createdAt(new Date()).build());
         }
 
