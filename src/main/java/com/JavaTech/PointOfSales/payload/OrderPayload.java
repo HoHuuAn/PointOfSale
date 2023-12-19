@@ -33,9 +33,11 @@ import lombok.ToString;
 public class OrderPayload {
 
 
-    @JsonProperty("quantity")
-    private int quantity;
 
     @JsonProperty("product")
     private ProductDTO product;
+
+    @JsonProperty("quantity")
+    private int quantity;
+
 }

@@ -10,8 +10,6 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class PointOfSalesApplication {
 
-
-
 	public static void main(String[] args) {
 		SpringApplication.run(PointOfSalesApplication.class, args);
 	}
@@ -19,6 +17,8 @@ public class PointOfSalesApplication {
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
 	}
+
+
 
 
 }

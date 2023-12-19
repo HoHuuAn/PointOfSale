@@ -13,17 +13,6 @@ public class UserDetailsImpl implements UserDetails {
     private final User user;
     private String avatar;
 
-    public UserDetailsImpl(User user, String avatar) {
-        this.user = user;
-        this.avatar = avatar;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-                .collect(Collectors.toList());
-    }
 
     @Override
     public String getPassword() {
@@ -64,4 +53,17 @@ public class UserDetailsImpl implements UserDetails {
     public String setAvatar(String avatar) {
         return this.avatar = avatar;
     }
+    public UserDetailsImpl(User user, String avatar) {
+        this.user = user;
+        this.avatar = avatar;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return user.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+                .collect(Collectors.toList());
+    }
+
+
 }

@@ -35,10 +35,11 @@ public class InvoiceGeneratorUtil {
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
+
+        String imagePath = "src/main/resources/static/assets/logo.png";
         PdfWriter pdfWriter = new PdfWriter(outputStream);
         PdfDocument pdfDocument = new PdfDocument(pdfWriter);
         pdfDocument.setDefaultPageSize(PageSize.A4);
-        String imagePath = "src/main/resources/static/assets/logo.png";
         Document document = new Document(pdfDocument);
 
 
@@ -61,9 +62,10 @@ public class InvoiceGeneratorUtil {
         float twocol=285f;
         float twocol150=twocol+150f;
         float[] twocolumnWidth = {twocol150, twocol};
+
+        float[] fullWidth = {threecol*3};
         float[] threecolumnWidth = {threecol, threecol, threecol};
         float[] fourcolumnWidth = {fourcol, fourcol, fourcol, fourcol};
-        float[] fullWidth = {threecol*3};
         Paragraph onesp = new Paragraph("\n");
 
         Table table = new Table(twocolumnWidth);
