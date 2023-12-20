@@ -13,16 +13,16 @@ public class FileUploadUtil {
         String fileNameWithoutExtension = file.getName().replaceFirst("[.][^.]+$", "");
 
         Path uploadPath = Paths.get("./src/main/resources/static/user-photos/" + fileNameWithoutExtension);
-
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-
         try (InputStream inputStream = multipartFile.getInputStream()) {
             Path filePath = uploadPath.resolve(fileName);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ioe) {
             throw new IOException("Could not save image file: " + fileName, ioe);
         }
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+
     }
 }

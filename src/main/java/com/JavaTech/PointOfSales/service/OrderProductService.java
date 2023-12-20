@@ -7,11 +7,14 @@ import java.util.Date;
 import java.util.List;
 
 public interface OrderProductService {
-    List<OrderProduct> findAllByCustomer(Customer customer);
+
 
     OrderProduct saveOrUpdate(OrderProduct orderProduct);
 
     OrderProduct findById(Long id);
 
     List<OrderProduct> getOrdersBetweenDates(Date startDate, Date endDate);
+    List<OrderProduct> findAllByCustomer(Customer customer);
+
+
 }

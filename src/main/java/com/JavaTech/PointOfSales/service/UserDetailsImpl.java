@@ -14,25 +14,7 @@ public class UserDetailsImpl implements UserDetails {
     private String avatar;
 
 
-    @Override
-    public String getPassword() {
-        return user.getPassword();
-    }
 
-    @Override
-    public String getUsername() {
-        return user.getUsername();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
 
     @Override
     public boolean isCredentialsNonExpired() {
@@ -65,5 +47,23 @@ public class UserDetailsImpl implements UserDetails {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public String getPassword() {
+        return user.getPassword();
+    }
 
+    @Override
+    public String getUsername() {
+        return user.getUsername();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 }
