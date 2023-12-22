@@ -31,6 +31,21 @@ public class InvoiceGeneratorUtil {
 //        Generate();
     }
 
+    static Cell getHeaderTextCell(String textValue){
+        return new Cell().add(textValue).setBold().setBorder(com.itextpdf.layout.border.Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT);
+    }
+    static Cell getHeaderTextCellValue(String textValue){
+        return new Cell().add(textValue).setBorder(com.itextpdf.layout.border.Border.NO_BORDER).setTextAlignment(TextAlignment.LEFT);
+    }
+
+    static Cell getBillingandShippingCell(String textValue){
+        return new Cell().add(textValue).setFontSize(12f).setBold().setBorder(com.itextpdf.layout.border.Border.NO_BORDER).setTextAlignment(TextAlignment.LEFT);
+    }
+
+    static Cell getCell10Left(String textValue, Boolean isBold){
+        Cell myCell = new Cell().add(textValue).setFontSize(10f).setBorder(com.itextpdf.layout.border.Border.NO_BORDER).setTextAlignment(TextAlignment.LEFT);
+        return isBold ? myCell.setBold() : myCell;
+    }
     public static ByteArrayOutputStream  Generate(CustomerDTO customerDTO, OrderProduct orderProduct) throws FileNotFoundException, MalformedURLException {
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -192,19 +207,5 @@ public class InvoiceGeneratorUtil {
         return outputStream;
     }
 
-    static Cell getHeaderTextCell(String textValue){
-        return new Cell().add(textValue).setBold().setBorder(com.itextpdf.layout.border.Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT);
-    }
-    static Cell getHeaderTextCellValue(String textValue){
-        return new Cell().add(textValue).setBorder(com.itextpdf.layout.border.Border.NO_BORDER).setTextAlignment(TextAlignment.LEFT);
-    }
 
-    static Cell getBillingandShippingCell(String textValue){
-        return new Cell().add(textValue).setFontSize(12f).setBold().setBorder(com.itextpdf.layout.border.Border.NO_BORDER).setTextAlignment(TextAlignment.LEFT);
-    }
-
-    static Cell getCell10Left(String textValue, Boolean isBold){
-        Cell myCell = new Cell().add(textValue).setFontSize(10f).setBorder(com.itextpdf.layout.border.Border.NO_BORDER).setTextAlignment(TextAlignment.LEFT);
-        return isBold ? myCell.setBold() : myCell;
-    }
 }

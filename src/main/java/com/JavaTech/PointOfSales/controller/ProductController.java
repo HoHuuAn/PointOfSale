@@ -28,6 +28,19 @@ public class ProductController {
 
 
 
+    @GetMapping(value = "/list")
+    public String listProduct(Model model){
+        List<ProductDTO> productDTOList = productService.listAll().stream()
+                .map(product -> {
+                    ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+                    QuantityProduct quantityProduct = findByProduct(product);
+                    productDTO.setQuantityOfBranch(quantityProduct.getQuantity());
+                    return productDTO;
+                })
+                .collect(Collectors.toList());
+        model.addAttribute("listProducts", productDTOList);
+        return "/products/page-list-product";
+    }
 
 
     @Autowired
@@ -47,19 +60,6 @@ public class ProductController {
 
     @Autowired
     private QuantityProductService quantityProductService;
-    @GetMapping(value = "/list")
-    public String listProduct(Model model){
-        List<ProductDTO> productDTOList = productService.listAll().stream()
-                .map(product -> {
-                    ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
-                    QuantityProduct quantityProduct = findByProduct(product);
-                    productDTO.setQuantityOfBranch(quantityProduct.getQuantity());
-                    return productDTO;
-                })
-                .collect(Collectors.toList());
-        model.addAttribute("listProducts", productDTOList);
-        return "/products/page-list-product";
-    }
 
     public QuantityProduct findByProduct(Product product){
         Optional<User> info = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());

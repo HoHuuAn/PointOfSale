@@ -9,7 +9,10 @@ import java.util.Optional;
 
 @Repository("confirmationTokenRepository")
 public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationToken, String> {
-    ConfirmationToken findByConfirmationToken(String confirmationToken);
 
     ConfirmationToken findConfirmationTokenByUserEntity(User user);
+    ConfirmationToken findByConfirmationToken(String confirmationToken);
+
+
+//    ConfirmationToken findConfirmationTokenByUserEntity(User user);
 }
