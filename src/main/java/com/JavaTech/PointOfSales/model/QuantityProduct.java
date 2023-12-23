@@ -14,6 +14,14 @@ import lombok.NoArgsConstructor;
 @Builder
 public class QuantityProduct {
 
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
+
+    @ManyToOne
+    @JoinColumn(name = "branch_id", referencedColumnName = "branch_id")
+    private Branch branch;
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     private Product product;
@@ -23,12 +31,6 @@ public class QuantityProduct {
 
 
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
 
-    @ManyToOne
-    @JoinColumn(name = "branch_id", referencedColumnName = "branch_id")
-    private Branch branch;
 
 }

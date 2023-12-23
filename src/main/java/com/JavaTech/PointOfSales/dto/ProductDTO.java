@@ -10,6 +10,12 @@ public class ProductDTO {
     @JsonProperty("id")
     private String id;
 
+
+    @JsonProperty("description")
+    private String description;
+
+
+
     @JsonProperty("name")
     private String name;
 
@@ -33,6 +39,4 @@ public class ProductDTO {
     @JsonProperty("brand")
     private BrandDTO brand;
 
-    @JsonProperty("description")
-    private String description;
 }
