@@ -12,6 +12,9 @@ import java.io.IOException;
 
 @Component
 public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+
+
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws ServletException, IOException {
@@ -24,5 +27,4 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         } else {
             response.sendRedirect("/");
         }
-    }
-}
+    }}

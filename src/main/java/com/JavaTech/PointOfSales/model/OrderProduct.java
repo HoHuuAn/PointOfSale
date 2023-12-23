@@ -25,18 +25,6 @@ public class OrderProduct {
 
 
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    private Date createdAt = new Date();
-
-    @Column(name = "total_amount")
-    private Long totalAmount = 0L;
-
-    @Column(name = "cash")
-    private Long cash;
-
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<OrderDetail> orderItems = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
@@ -53,4 +41,20 @@ public class OrderProduct {
     @Column(name = "order_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
+
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at")
+    private Date createdAt = new Date();
+
+    @Column(name = "total_amount")
+    private Long totalAmount = 0L;
+
+    @Column(name = "cash")
+    private Long cash;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<OrderDetail> orderItems = new ArrayList<>();
 }
