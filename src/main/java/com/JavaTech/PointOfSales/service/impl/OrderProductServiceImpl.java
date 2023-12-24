@@ -3,6 +3,7 @@ package com.JavaTech.PointOfSales.service.impl;
 import com.JavaTech.PointOfSales.model.*;
 import com.JavaTech.PointOfSales.repository.OrderProductRepository;
 import com.JavaTech.PointOfSales.service.OrderProductService;
+import com.JavaTech.PointOfSales.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,9 @@ import java.util.stream.Collectors;
 public class OrderProductServiceImpl implements OrderProductService {
     @Autowired
     private OrderProductRepository orderProductRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public List<OrderProduct> findAllByCustomer(Customer customer) {
@@ -31,7 +35,10 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     @Override
     public List<OrderProduct> getOrdersBetweenDates(Date startDate, Date endDate) {
-        return orderProductRepository.findByCreatedAtBetween(startDate, endDate);
+        return orderProductRepository.findByCreatedAtBetween(startDate, endDate)
+                .stream()
+                .filter(orderProduct -> orderProduct.getBranch().equals(userService.getCurrentUser().getBranch()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -75,7 +82,7 @@ public class OrderProductServiceImpl implements OrderProductService {
             int year = orderCalendar.get(Calendar.YEAR);
             int month = orderCalendar.get(Calendar.MONTH) + 1;
             String key = String.format("%04d-%02d", year, month);
-            Long currentTotal = sumByMonth.get(key);
+            Long currentTotal = sumByMonth.getOrDefault(key, 0L);
             sumByMonth.put(key, currentTotal + orderProduct.getTotalAmount());
         }
         return sumByMonth;

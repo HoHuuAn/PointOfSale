@@ -20,7 +20,7 @@ public interface OrderProductRepository extends JpaRepository<OrderProduct, Long
 
     List<OrderProduct> findByCreatedAtBetweenAndBranch(Date startDate, Date endDate, Branch branch);
 
-    @Query("SELECT SUM(od.quantity) FROM OrderProduct op INNER JOIN op.orderItems od WHERE op.branch = :branch")
+    @Query("SELECT COALESCE(SUM(od.quantity), 0) FROM OrderProduct op LEFT JOIN op.orderItems od WHERE op.branch = :branch")
     Integer sumQuantityByBranch(@Param("branch") Branch branch);
 
     @Query(value = "select * from (SELECT SUM(customer_count) FROM (SELECT COUNT(DISTINCT op.customer_id) AS customer_count FROM orders_product op GROUP BY op.customer_id HAVING COUNT(op.customer_id) >= 2) AS subquery) sS", nativeQuery = true)

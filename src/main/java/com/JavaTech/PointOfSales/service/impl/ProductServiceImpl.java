@@ -50,20 +50,18 @@ public class ProductServiceImpl implements ProductService {
                 .map(product -> {
                     ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
                     QuantityProduct quantityProduct = findByProduct(product);
-                    productDTO.setQuantityOfBranch(quantityProduct.getQuantity());
+                    if ((quantityProduct != null)) {
+                        productDTO.setQuantityOfBranch(quantityProduct.getQuantity());
+                    } else {
+                        productDTO.setQuantityOfBranch(0);
+                    }
                     return productDTO;
                 })
                 .collect(Collectors.toList());
     }
 
     public QuantityProduct findByProduct(Product product){
-        Optional<User> info = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        User user = null;
-        if(info.isPresent()){
-            user = info.get();
-        }
-        assert user != null;
-        return quantityProductService.findByBranchAndProduct(user.getBranch(), product);
+        return quantityProductService.findByBranchAndProduct(userService.getCurrentUser().getBranch(), product);
     }
 
     @Override
@@ -89,10 +87,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO> getTopThreeProductsByTotalSales() {
-        // Retrieve all products from the repository
         List<Product> products = productRepository.findAll();
 
-        // Sort the products by their total sales in descending order
         List<Product> list = products.stream()
                 .sorted(Comparator.comparingInt(Product::getTotalSales).reversed())
                 .limit(3)
@@ -106,8 +102,8 @@ public class ProductServiceImpl implements ProductService {
         return list.stream()
                 .map(product -> {
                     ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
-                    QuantityProduct quantityProduct = findByProduct(product);
-                    productDTO.setQuantityOfBranch(quantityProduct.getQuantity());
+//                    QuantityProduct quantityProduct = quantityProductService
+//                    productDTO.setQuantityOfBranch(quantityProduct.getQuantity());
                     return productDTO;
                 })
                 .collect(Collectors.toList());

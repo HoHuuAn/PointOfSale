@@ -1039,8 +1039,8 @@
         }
 
         // product sold
-        const sumQuantityInInventory = [[${sumQuantityInInventory}]];
-        const sumQuantitySold = [[${sumQuantitySold}]];
+        const sumQuantityInInventory = ([[${sumQuantityInInventory}]] == null) ? 0 : [[${sumQuantityInInventory}]];
+        const sumQuantitySold = ([[${sumQuantitySold}]] == null) ? 0 : [[${sumQuantitySold}]];
         setCircleProgress(sumQuantityInInventory - sumQuantitySold, sumQuantityInInventory, 'circleProductSold');
 
         // loyal customer

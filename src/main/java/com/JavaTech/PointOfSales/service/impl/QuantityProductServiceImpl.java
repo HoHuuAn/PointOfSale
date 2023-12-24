@@ -8,6 +8,8 @@ import com.JavaTech.PointOfSales.service.QuantityProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class QuantityProductServiceImpl implements QuantityProductService {
 
@@ -21,11 +23,16 @@ public class QuantityProductServiceImpl implements QuantityProductService {
 
     @Override
     public QuantityProduct findByBranchAndProduct(Branch branch, Product product) {
-        return quantityProductRepository.findQuantityProductByBranchAndProduct(branch, product);
+        return quantityProductRepository.findQuantityProductByBranchAndProduct(branch, product).orElse(null);
     }
 
     @Override
     public int sumQuantityByBranch(Branch branch) {
         return quantityProductRepository.sumQuantityByBranch(branch);
+    }
+
+    @Override
+    public List<QuantityProduct> findAllByBranch(Branch branch) {
+        return quantityProductRepository.findAllByBranch(branch);
     }
 }
