@@ -49,7 +49,7 @@ public class HomeController {
         if(user.isFirstLogin()){
             return "redirect:/change-password-first-time";
         }
-        
+
         Map<String, Long> sumByMonth = orderProductService.getSumTotalAmountByMonth(user.getBranch());
         List<String> months = new ArrayList<>();
         List<Long> amounts = new ArrayList<>();

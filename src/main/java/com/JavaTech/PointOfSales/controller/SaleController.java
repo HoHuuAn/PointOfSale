@@ -87,7 +87,7 @@ public class SaleController {
             quantityProduct.setQuantity(quantityProduct.getQuantity() - quantity);
 
             //total sales
-            product.setTotalSales(product.getTotalSales() + quantityProduct.getQuantity());
+            product.setTotalSales(product.getTotalSales() + quantity);
             productService.saveOrUpdate(product);
 
             //handle order
