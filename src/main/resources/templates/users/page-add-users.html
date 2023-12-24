@@ -24,8 +24,8 @@
                                                 <img id="profile-image"  class="crm-profile-pic rounded avatar-100"
                                                      th:src="@{/assets/images/user/01.jpg}" alt="profile-pic">
                                                 <div class="crm-p-image bg-primary">
-                                                    <i class="las la-pen upload-button"></i>
-                                                    <input name="avatar" class="file-upload" type="file" accept="image/png, image/jpeg, image/jpg" onchange="displayImage()">
+                                                    <label for="avatar" class="text-white"><i class="las la-pen upload-button"></i></label>
+                                                    <input id="avatar" name="avatar" class="file-upload" type="file" accept="image/png, image/jpeg, image/jpg" onchange="displayImage()">
                                                 </div>
                                             </div>
                                             <div class="d-inline-block align-items-center">

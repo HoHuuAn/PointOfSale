@@ -23,7 +23,7 @@ public class BarcodeUtil {
         System.out.println("Code128 barcode with text created successfully.");
     }
 
-    public static MultipartFile   generateCodeBarcode(String data, String name) throws IOException {
+    public static MultipartFile generateCodeBarcode(String data, String name) throws IOException {
         try {
             Map<EncodeHintType, Object> hints = new HashMap<>();
             hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");

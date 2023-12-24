@@ -24,8 +24,8 @@
                                                      th:src="@{'data:image/png;base64,' + ${product.getEncodedImage()}}"
                                                      alt="profile-pic" id="profile-image">
                                                 <div class="crm-p-image bg-primary">
-                                                    <i class="las la-pen upload-button"></i>
-                                                    <input class="file-upload" type="file"
+                                                    <label for="image" class="text-white"><i class="las la-pen upload-button"></i></label>
+                                                    <input id="image" class="file-upload" type="file"
                                                            accept="image/*" onchange="displayImage()" name="image">
                                                 </div>
                                             </div>

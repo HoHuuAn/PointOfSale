@@ -608,7 +608,7 @@
     </div>
     <!-- Wrapper End-->
 
-    
+
     <!-- Footer Start -->
     <footer class="iq-footer">
         <div class="container-fluid">
@@ -733,10 +733,97 @@
             cb(start, end);
         });
 
-        function showOrder(orderList) {
+//         function showOrder(orderList) {
+//             var tableBody = document.getElementById('table-order-report');
+//             tableBody.innerHTML = ''
+//             orderList.forEach( (order) => {
+//                 var newRow = document.createElement('tr');
+//                 var createdAtDate = new Date(order.createdAt);
+//
+//                 var formattedDate = createdAtDate.toISOString().split('T')[0];
+//                 var totalQuantity = order.orderItems.reduce((acc, item) => acc + item.quantity, 0);
+//
+//                 newRow.innerHTML = `
+// <!--                                        <td>${order.id}</td>-->
+//                                         <td>${order.nameOfCustomer}</td>
+//                                         <td>${order.totalAmount}</td>
+//                                         <td>${order.cash}</td>
+//                                         <td>${order.cash - order.totalAmount}</td>
+//                                         <td>${formattedDate}</td>
+//                                         <td>${totalQuantity}</td>
+//                                         <td>
+//                                             <div class="d-flex align-items-center list-action">
+//                                                             <button type="button" class="btn btn-primary mt-2" data-toggle="modal" data-target=".bd-example-modal-xl"><i
+//                                                                     class="ri-eye-line mr-0"></i></button>
+//                                                             <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-hidden="true">
+//                                                                 <div class="modal-dialog modal-xl">
+//                                                                     <div class="modal-content">
+//                                                                         <div class="modal-header">
+//                                                                             <h5 class="modal-title">Order Detail</h5>
+//                                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+//                                                                                 <span aria-hidden="true">×</span>
+//                                                                             </button>
+//                                                                         </div>
+//                                                                         <div class="modal-body">
+//                                                                             <div class="col-lg-12">
+//                                                                                 <div class="table-responsive rounded mb-3">
+//                                                                                     <table id="datatable" class="table mb-0 tbl-server-info">
+//                                                                                         <thead class="bg-white text-uppercase">
+//                                                                                         <tr class="ligth ligth-data">
+//                                                                                             <th>Id</th>
+//                                                                                             <th>Name Product</th>
+//                                                                                             <th>Price</th>
+//                                                                                             <th>Quantity</th>
+//                                                                                             <th>Subtotal</th>
+//                                                                                         </tr>
+//                                                                                         </thead>
+//                                                                                         <tbody class="ligth-body" id="${order.id}">
+//
+//                                                                                         </tbody>
+//                                                                                     </table>
+//
+//                                                                                 </div>
+//                                                                             </div>
+//                                                                         </div>
+//                                                                         <div class="modal-footer">
+//                                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+//                                                                         </div>
+//                                                                     </div>
+//                                                                 </div>
+//                                                             </div>
+//                                             </div>
+//                                         </td>
+//                                         `;
+//                 tableBody.appendChild(newRow);
+//                 var modalTableBody = document.getElementById(`${order.id}`);
+//                 order.orderItems.forEach(item => {
+//                     var row = document.createElement('tr');
+//                     row.innerHTML = `
+//                     <td>${item.id}</td>
+//                     <td>
+//
+//                          <div class="d-flex align-items-center">
+//                                                 <img  src="data:image/png;base64,${item.product.image}"
+//                                                     class="img-fluid rounded avatar-50 mr-3" alt="image">
+//                                                 <div>${item.product.name}</div>
+//                                             </div>
+//                     </td>
+//                     <td>${item.product.retailPrice}</td>
+//                     <td>${item.quantity}</td>
+//                     <td>${item.quantity * item.product.retailPrice}</td>
+//                 `;
+//                     modalTableBody.appendChild(row);
+//                 });
+//             })
+//         }
+
+
+
+        function showOrder(orderList, orderId) {
             var tableBody = document.getElementById('table-order-report');
-            tableBody.innerHTML = ''
-            orderList.forEach( (order) => {
+            tableBody.innerHTML = '';
+
+            orderList.forEach((order) => {
                 var newRow = document.createElement('tr');
                 var createdAtDate = new Date(order.createdAt);
 
@@ -744,77 +831,97 @@
                 var totalQuantity = order.orderItems.reduce((acc, item) => acc + item.quantity, 0);
 
                 newRow.innerHTML = `
-<!--                                        <td>${order.id}</td>-->
-                                        <td>${order.nameOfCustomer}</td>
-                                        <td>${order.totalAmount}</td>
-                                        <td>${order.cash}</td>
-                                        <td>${order.cash - order.totalAmount}</td>
-                                        <td>${formattedDate}</td>
-                                        <td>${totalQuantity}</td>
-                                        <td>
-                                            <div class="d-flex align-items-center list-action">
-                                                            <button type="button" class="btn btn-primary mt-2" data-toggle="modal" data-target=".bd-example-modal-xl"><i
-                                                                    class="ri-eye-line mr-0"></i></button>
-                                                             <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-hidden="true">
-                                                                <div class="modal-dialog modal-xl">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header">
-                                                                            <h5 class="modal-title">Order Detail</h5>
-                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                <span aria-hidden="true">×</span>
-                                                                            </button>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            <div class="col-lg-12">
-                                                                                <div class="table-responsive rounded mb-3">
-                                                                                    <table id="datatable" class="table mb-0 tbl-server-info">
-                                                                                        <thead class="bg-white text-uppercase">
-                                                                                        <tr class="ligth ligth-data">
-                                                                                            <th>Id</th>
-                                                                                            <th>Name Product</th>
-                                                                                            <th>Price</th>
-                                                                                            <th>Quantity</th>
-                                                                                            <th>Subtotal</th>
-                                                                                        </tr>
-                                                                                        </thead>
-                                                                                        <tbody class="ligth-body" id="${order.id}">
+            <td>${order.nameOfCustomer}</td>
+            <td>${order.totalAmount}</td>
+            <td>${order.cash}</td>
+            <td>${order.cash - order.totalAmount}</td>
+            <td>${formattedDate}</td>
+            <td>${totalQuantity}</td>
+            <td>
+                <div class="d-flex align-items-center list-action">
+                    <button type="button" class="btn btn-primary mt-2" data-toggle="modal" data-target="#modal-${order.id}">
+                        <i class="ri-eye-line mr-0"></i>
+                    </button>
+                </div>
+            </td>
+        `;
 
-                                                                                        </tbody>
-                                                                                    </table>
-
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="modal-footer">
-                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                            </div>
-                                        </td>
-                                        `;
                 tableBody.appendChild(newRow);
-                var modalTableBody = document.getElementById(`${order.id}`);
-                order.orderItems.forEach(item => {
+
+                var modalTableBody = document.createElement('tbody');
+                modalTableBody.classList.add('ligth-body');
+                modalTableBody.id = `modal-${order.id}`;
+
+                order.orderItems.forEach((item) => {
                     var row = document.createElement('tr');
                     row.innerHTML = `
-                    <td>${item.id}</td>
-                    <td>
+                <td>${item.id}</td>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <img src="data:image/png;base64,${item.product.image}" class="img-fluid rounded avatar-50 mr-3" alt="image">
+                        <div>${item.product.name}</div>
+                    </div>
+                </td>
+                <td>${item.product.retailPrice}</td>
+                <td>${item.quantity}</td>
+                <td>${item.quantity * item.product.retailPrice}</td>
+            `;
 
-                         <div class="d-flex align-items-center">
-                                                <img  src="data:image/png;base64,${item.product.image}"
-                                                    class="img-fluid rounded avatar-50 mr-3" alt="image">
-                                                <div>${item.product.name}</div>
-                                            </div>
-                    </td>
-                    <td>${item.product.retailPrice}</td>
-                    <td>${item.quantity}</td>
-                    <td>${item.quantity * item.product.retailPrice}</td>
-                `;
                     modalTableBody.appendChild(row);
                 });
-            })
+
+                var modalContent = document.createElement('div');
+                modalContent.classList.add('modal-content');
+                modalContent.innerHTML = `
+            <div class="modal-header">
+                <h5 class="modal-title">Order Detail</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <div class="table-responsive rounded mb-3">
+                        <table id="datatable" class="table mb-0 tbl-server-info">
+                            <thead class="bg-white text-uppercase">
+                                <tr class="ligth ligth-data">
+                                    <th>Id</th>
+                                    <th>Name Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        `;
+
+                modalContent.querySelector('table').appendChild(modalTableBody);
+
+                var modalDialog = document.createElement('div');
+                modalDialog.classList.add('modal-dialog', 'modal-xl');
+                modalDialog.appendChild(modalContent);
+
+                var modal = document.createElement('div');
+                modal.classList.add('modal', 'fade', 'bd-example-modal-xl');
+                modal.id = `modal-${order.id}`;
+                modal.tabIndex = '-1';
+                modal.role = 'dialog';
+                modal.setAttribute('aria-hidden', 'true');
+                modal.appendChild(modalDialog);
+
+                document.body.appendChild(modal);
+            });
+
+            if (orderId) {
+                var modalId = `#modal-${orderId}`;
+                $(modalId).modal('show');
+            }
         }
     </script>
 

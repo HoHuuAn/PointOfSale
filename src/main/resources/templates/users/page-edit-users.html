@@ -50,8 +50,8 @@
                                                                      th:src="@{'data:image/png;base64,' + ${user.getAvatar()}}"
                                                                      alt="profile-pic" id="profile-image">
                                                                 <div class="crm-p-image bg-primary">
-                                                                    <i class="las la-pen upload-button"></i>
-                                                                    <input class="file-upload" type="file"
+                                                                    <label for="avatar" class="text-white"><i class="las la-pen upload-button"></i></label>
+                                                                    <input id="avatar" class="file-upload" type="file"
                                                                            accept="image/*" onchange="displayImage()" name="avatar">
                                                                 </div>
                                                             </div>
