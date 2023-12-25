@@ -102,6 +102,8 @@ public class SaleController {
             orderProduct.getOrderItems().add(orderDetail);
         }
         orderProduct.setBranch(userService.getCurrentUser().getBranch());
+        orderProduct.setCash(0L);
+//        orderProduct.setCustomer();
         orderProductService.saveOrUpdate(orderProduct);
 
         return ResponseEntity.ok("/sales/page-checkout?id=" + orderProduct.getId());

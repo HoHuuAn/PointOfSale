@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface QuantityProductRepository extends JpaRepository<QuantityProduct, Long> {
     Optional<QuantityProduct> findQuantityProductByBranchAndProduct(Branch branch, Product product);
 
-    @Query("SELECT SUM(qp.quantity) FROM QuantityProduct qp WHERE qp.branch = :branch")
+    @Query("SELECT COALESCE(SUM(qp.quantity), 0) FROM QuantityProduct qp WHERE qp.branch = :branch")
     Integer sumQuantityByBranch(@Param("branch") Branch branch);
 
     List<QuantityProduct> findAllByBranch(Branch branch);
