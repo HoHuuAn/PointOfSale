@@ -96,7 +96,7 @@
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <img class="img-fluid rounded avatar-80 mr-3 w- h-auto"
-                                                             th:src="@{'data:image/png;base64,' + ${orderItem.product.getImage()}}"
+                                                             th:src="@{'data:image/png;base64,' + ${orderItem.product.getEncodedImage()}}"
                                                              alt="profile-pic">
                                                         <div th:text="${orderItem.getProduct().getName()}"></div>
                                                     </div>
@@ -392,7 +392,7 @@
                 xhr.setRequestHeader(header, token);
             },
             success: function (data) {
-                sessionStorage.setItem('data', JSON.stringify(data));
+                localStorage.setItem('data', JSON.stringify(data));
                 displayCustomerInfo(data)
             },
             error: function () {
@@ -403,15 +403,15 @@
     $('#phoneInput').on('change', function () {
         fetchCustomerData();
     });
-    // Check if there's data in sessionStorage when the page loads
+    // Check if there's data in localStorage when the page loads
     document.addEventListener('DOMContentLoaded', function () {
-        var sessesionData = sessionStorage.getItem('data');
+        var sessesionData = localStorage.getItem('data');
 
         if (sessesionData) {
             var data = JSON.parse(sessesionData);
             displayCustomerInfo(data)
         }
-        sessesionData = sessionStorage.getItem('dataOrder');
+        sessesionData = localStorage.getItem('dataOrder');
 
         if (sessesionData) {
             var dataOrder = JSON.parse(sessesionData);
@@ -530,7 +530,7 @@
                     xhr.setRequestHeader(header, token);
                 },
                 success: function (data) {
-                    sessionStorage.setItem('data', JSON.stringify(data));
+                    localStorage.setItem('data', JSON.stringify(data));
                     displayCustomerInfo(data)
                 },
                 error: function () {
@@ -548,7 +548,7 @@
             $('#phoneInput').val('');
             $('#nameInput').val('');
             $('#addressInput').val('');
-            sessionStorage.removeItem('data');
+            localStorage.removeItem('data');
         })
     });
     function notifyCreate(phone) {
@@ -575,13 +575,13 @@
     // document.addEventListener("DOMContentLoaded", function() {
     //     const checkoutButton = document.querySelector('#complete-order');
     //     checkoutButton.addEventListener('click', function() {
-    //         var sessionData = sessionStorage.getItem('dataOrder');
-    //         var customerSession = sessionStorage.getItem('data');
+    //         var localData = localStorage.getItem('dataOrder');
+    //         var customerSession = localStorage.getItem('data');
     //
     //         let idValue =  window.location.href.split('?id=')[1];
     //         console.log(idValue )
     //         var cash = $('#cash-by-customer').val()
-    //         if (sessionData !== null && customerSession !== null) {
+    //         if (localData !== null && customerSession !== null) {
     //
     //             var customer = JSON.parse(customerSession);
     //
@@ -630,11 +630,11 @@
     //     })
     // })
     function completeOrder(){
-        sessionStorage.clear();
+        localStorage.clear();
         window.location.href = '/sales/sales-page';
     }
     function printInvoice() {
-        var customerSession = sessionStorage.getItem('data');
+        var customerSession = localStorage.getItem('data');
 
         let idValue =  window.location.href.split('?id=')[1];
         var cash = $('#cash-by-customer').val()

@@ -8,36 +8,12 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 import java.util.UUID;
 
-
 @Entity
 @Table(name="confirmationToken")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConfirmationToken {
-
-    public long getTokenid() {
-        return tokenid;
-    }
-
-    public void setTokenid(long tokenid) {
-        this.tokenid = tokenid;
-    }
-
-    public String getConfirmationToken() {
-        return confirmationToken;
-    }
-
-    public void setConfirmationToken(String confirmationToken) {
-        this.confirmationToken = confirmationToken;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -60,6 +36,26 @@ public class ConfirmationToken {
         confirmationToken = UUID.randomUUID().toString();
     }
 
+    public long getTokenid() {
+        return tokenid;
+    }
+
+    public void setTokenid(long tokenid) {
+        this.tokenid = tokenid;
+    }
+
+    public String getConfirmationToken() {
+        return confirmationToken;
+    }
+
+    public void setConfirmationToken(String confirmationToken) {
+        this.confirmationToken = confirmationToken;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
@@ -71,5 +67,4 @@ public class ConfirmationToken {
     public void setUserEntity(User userEntity) {
         this.userEntity = userEntity;
     }
-
 }

@@ -16,7 +16,14 @@ import java.io.IOException;
 @RequestMapping(value = "/brands")
 public class BrandController {
 
+    @Autowired
+    private BrandService brandService;
 
+    @GetMapping(value = "/list")
+    public String listBrand(Model model){
+        model.addAttribute("listBrands", brandService.listAll());
+        return "/brands/page-list-brand";
+    }
 
     @GetMapping(value = "/add")
     public String addBrand(){
@@ -71,13 +78,5 @@ public class BrandController {
     public String delete(@PathVariable(name = "id") Long id){
         brandService.deleteById(id);
         return "redirect:/brands/list";
-    }
-    @Autowired
-    private BrandService brandService;
-
-    @GetMapping(value = "/list")
-    public String listBrand(Model model){
-        model.addAttribute("listBrands", brandService.listAll());
-        return "/brands/page-list-brand";
     }
 }

@@ -44,11 +44,11 @@ public class DataLoader implements CommandLineRunner {
             roleRepository.save(new Role(ERole.ROLE_USER));
         }
 
-        if (branchRepository.findBranchByNameAndAddress("Branch 1", "District 1").isEmpty()) {
+        if (branchRepository.findBranchByName("Branch 1").isEmpty()) {
             branchRepository.save(Branch.builder().name("Branch 1").address("District 1").createdAt(new Date()).build());
         }
 
-        if (branchRepository.findBranchByNameAndAddress("Branch 2", "District 2").isEmpty()) {
+        if (branchRepository.findBranchByName("Branch 2").isEmpty()) {
             branchRepository.save(Branch.builder().name("Branch 2").address("District 2").createdAt(new Date()).build());
         }
 
@@ -56,25 +56,6 @@ public class DataLoader implements CommandLineRunner {
         ClassPathResource resource = new ClassPathResource(defaultImageFilePath);
         byte[] defaultImageBytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
         MultipartFile avatar = new MockMultipartFile("default-avatar.png", defaultImageBytes);
-
-
-        if(userRepository.getUserByUsername("admin2").isEmpty()){
-            User admin2 = User.builder()
-                    .username("admin2")
-                    .password(passwordEncoder.encode("admin2"))
-                    .activated(true)
-                    .unlocked(true)
-                    .avatar(ImageUtil.convertToBase64(avatar))
-                    .firstLogin(false)
-                    .branch(branchRepository.findBranchByName("Branch 2").orElseThrow())
-                    .build();
-            userRepository.save(admin2);
-            userRepository.addUserRole(admin2.getId(), 1L);
-        }
-
-
-
-
 
         if(userRepository.getUserByUsername("admin1").isEmpty()){
             User admin1 = User.builder()
@@ -90,12 +71,38 @@ public class DataLoader implements CommandLineRunner {
             userRepository.addUserRole(admin1.getId(), 1L);
         }
 
+        if(userRepository.getUserByUsername("admin2").isEmpty()){
+            User admin2 = User.builder()
+                    .username("admin2")
+                    .password(passwordEncoder.encode("admin2"))
+                    .activated(true)
+                    .unlocked(true)
+                    .avatar(ImageUtil.convertToBase64(avatar))
+                    .firstLogin(false)
+                    .branch(branchRepository.findBranchByName("Branch 2").orElseThrow())
+                    .build();
+            userRepository.save(admin2);
+            userRepository.addUserRole(admin2.getId(), 1L);
+        }
 
         defaultImageFilePath = "static/assets/images/user/01.jpg";
         resource = new ClassPathResource(defaultImageFilePath);
         defaultImageBytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
         avatar = new MockMultipartFile("default-avatar.png", defaultImageBytes);
 
+        if(userRepository.getUserByUsername("user1").isEmpty()){
+            User user1 = User.builder()
+                    .username("user1")
+                    .password(passwordEncoder.encode("user1"))
+                    .activated(true)
+                    .unlocked(true)
+                    .avatar(ImageUtil.convertToBase64(avatar))
+                    .firstLogin(false)
+                    .branch(branchRepository.findBranchByName("Branch 1").orElseThrow())
+                    .build();
+            userRepository.save(user1);
+            userRepository.addUserRole(user1.getId(), 2L);
+        }
 
         if(userRepository.getUserByUsername("user2").isEmpty()){
             User user2 = User.builder()
@@ -113,23 +120,6 @@ public class DataLoader implements CommandLineRunner {
 
         defaultImageFilePath = "static/brands/Apple/Apple.jpg";
         resource = new ClassPathResource(defaultImageFilePath);
-
-
-        if(userRepository.getUserByUsername("user1").isEmpty()){
-            User user1 = User.builder()
-                    .username("user1")
-                    .password(passwordEncoder.encode("user1"))
-                    .activated(true)
-                    .unlocked(true)
-                    .avatar(ImageUtil.convertToBase64(avatar))
-                    .firstLogin(false)
-                    .branch(branchRepository.findBranchByName("Branch 1").orElseThrow())
-                    .build();
-            userRepository.save(user1);
-            userRepository.addUserRole(user1.getId(), 2L);
-        }
-
-
         defaultImageBytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
         avatar = new MockMultipartFile("default-avatar.png", defaultImageBytes);
 
@@ -141,8 +131,6 @@ public class DataLoader implements CommandLineRunner {
                     .build();
             brandRepository.save(apple);
         }
-
-
 
         defaultImageFilePath = "static/brands/Samsung/Samsung.jpg";
         resource = new ClassPathResource(defaultImageFilePath);

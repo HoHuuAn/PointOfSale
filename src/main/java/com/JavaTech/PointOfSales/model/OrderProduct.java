@@ -19,31 +19,10 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class OrderProduct {
-
-
-
-
-
-
-
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    @JsonBackReference
-    private Customer customer;
-
-    @ManyToOne
-    @JoinColumn(name = "branch_id")
-    @JsonBackReference
-    private Branch branch;
-
-
     @Id
     @Column(name = "order_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-
-
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
@@ -57,4 +36,14 @@ public class OrderProduct {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<OrderDetail> orderItems = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    @JsonBackReference
+    private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name = "branch_id")
+    @JsonBackReference
+    private Branch branch;
 }

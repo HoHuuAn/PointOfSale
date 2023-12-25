@@ -40,8 +40,9 @@ public class Product {
     @JsonBackReference
     private List<QuantityProduct> quantityProduct;
 
-    @Column(name = "image", columnDefinition = "TEXT")
-    private String image;
+    @Lob
+    @Column(name = "image", columnDefinition = "LONGBLOB")
+    private byte[] image;
 
     @Column(name = "create_at")
     @Temporal(TemporalType.TIMESTAMP)
@@ -55,6 +56,9 @@ public class Product {
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+
+    @Column(name = "total_Sales")
+    private Integer totalSales=0;
 
     @ManyToOne
     @JoinColumn(name = "brand_id")

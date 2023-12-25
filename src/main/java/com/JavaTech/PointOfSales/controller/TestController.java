@@ -13,19 +13,17 @@ public class TestController {
         return "Public Content.";
     }
 
-
+    @GetMapping("/user")
+    @ResponseBody
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public String userAccess() {
+        return "USER Board.";
+    }
 
     @GetMapping("/admin")
     @ResponseBody
     @PreAuthorize("hasAuthority('ADMIN')")
     public String adminAccess() {
         return "ADMIN Board.";
-    }
-
-    @GetMapping("/user")
-    @ResponseBody
-    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public String userAccess() {
-        return "USER Board.";
     }
 }

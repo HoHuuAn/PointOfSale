@@ -26,6 +26,19 @@ import java.util.Set;
                 @UniqueConstraint(columnNames = "email")
         })
 public class User implements Serializable {
+    @Id
+    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "avatar", columnDefinition = "TEXT")
+    private String avatar;
+
+    @Column(nullable = true, name = "full_name")
+    private String fullName;
+
+    @Column(nullable = true, name = "phone")
+    private String phone;
 
     @Size(max = 50)
     @Email
@@ -74,19 +87,4 @@ public class User implements Serializable {
         this.avatar = avatar;
         this.firstLogin = firstLogin;
     }
-
-    @Id
-    @Column(name = "user_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "avatar", columnDefinition = "TEXT")
-    private String avatar;
-
-    @Column(nullable = true, name = "full_name")
-    private String fullName;
-
-    @Column(nullable = true, name = "phone")
-    private String phone;
-
 }

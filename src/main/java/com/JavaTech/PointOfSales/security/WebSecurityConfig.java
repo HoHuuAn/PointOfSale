@@ -1,6 +1,6 @@
 package com.JavaTech.PointOfSales.security;
 
-import com.JavaTech.PointOfSales.service.UserDetailsServiceImpl;
+import com.JavaTech.PointOfSales.security.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +16,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
+    @Autowired
+    private LoginSuccessHandler loginSuccessHandler;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
 
     @Bean
@@ -27,14 +32,6 @@ public class WebSecurityConfig {
 
         return authenticationProvider;
     }
-
-
-    @Autowired
-    private LoginSuccessHandler loginSuccessHandler;
-
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

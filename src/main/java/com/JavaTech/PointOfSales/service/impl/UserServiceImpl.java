@@ -4,6 +4,7 @@ import com.JavaTech.PointOfSales.model.User;
 import com.JavaTech.PointOfSales.repository.UserRepository;
 import com.JavaTech.PointOfSales.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,4 +48,13 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
+    @Override
+    public User getCurrentUser() {
+        Optional<User> info = findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = null;
+        if(info.isPresent()){
+            user = info.get();
+        }
+        return user;
+    }
 }

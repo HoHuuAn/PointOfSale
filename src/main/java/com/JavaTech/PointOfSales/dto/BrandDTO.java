@@ -21,5 +21,4 @@ public class BrandDTO {
 
     @JsonProperty("website")
     private String website;
-
 }

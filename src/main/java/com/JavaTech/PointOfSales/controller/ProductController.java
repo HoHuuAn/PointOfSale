@@ -1,47 +1,38 @@
 package com.JavaTech.PointOfSales.controller;
 
 
-import com.JavaTech.PointOfSales.dto.ProductDTO;
 import com.JavaTech.PointOfSales.model.*;
 import com.JavaTech.PointOfSales.service.*;
 import com.JavaTech.PointOfSales.utils.BarcodeUtil;
 import com.JavaTech.PointOfSales.utils.ImageUtil;
+import com.JavaTech.PointOfSales.dto.ProductDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.springframework.beans.factory.support.InstanceSupplier.using;
+
 @Controller
 @RequestMapping("/products")
 public class ProductController {
-
-
-
-
-
-    @GetMapping(value = "/list")
-    public String listProduct(Model model){
-        List<ProductDTO> productDTOList = productService.listAll().stream()
-                .map(product -> {
-                    ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
-                    QuantityProduct quantityProduct = findByProduct(product);
-                    productDTO.setQuantityOfBranch(quantityProduct.getQuantity());
-                    return productDTO;
-                })
-                .collect(Collectors.toList());
-        model.addAttribute("listProducts", productDTOList);
-        return "/products/page-list-product";
-    }
-
 
     @Autowired
     private UserService userService;
@@ -61,14 +52,14 @@ public class ProductController {
     @Autowired
     private QuantityProductService quantityProductService;
 
+    @GetMapping(value = "/list")
+    public String listProduct(Model model){
+        model.addAttribute("listProducts", productService.listAllDTO());
+        return "/products/page-list-product";
+    }
+
     public QuantityProduct findByProduct(Product product){
-        Optional<User> info = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        User user = null;
-        if(info.isPresent()){
-            user = info.get();
-        }
-        assert user != null;
-        return quantityProductService.findByBranchAndProduct(user.getBranch(), product);
+        return quantityProductService.findByBranchAndProduct(userService.getCurrentUser().getBranch(), product);
     }
 
     @GetMapping(value = "/add")
@@ -93,30 +84,26 @@ public class ProductController {
                 .name(name)
                 .importPrice(importPrice)
                 .retailPrice(retailPrice)
-                .image(ImageUtil.convertToBase64(image))
+                .image(image.getBytes())
                 .createdAt(new Date())
                 .barCode(barCode)
                 .imageBarCode(ImageUtil.convertToBase64(BarcodeUtil.generateCodeBarcode(barCode, name)))
                 .brand(brand_org)
+                .totalSales(0)
                 .description(description)
                 .build();
         brand_org.getProducts().add(product);
         brandService.addOrSave(brand_org);
         productService.saveOrUpdate(product);
 
-        Optional<User> info = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        User user = null;
-        if(info.isPresent()){
-            user = info.get();
-        }
-        assert user != null;
-
+        //quantity
+        Branch branchCurrent = userService.getCurrentUser().getBranch();
         List<Branch> allBranches = branchService.listAll();
 
         for (Branch branch : allBranches) {
-            if (branch.equals(user.getBranch())) {
+            if (branch.equals(branchCurrent)) {
                 QuantityProduct quantityProduct = QuantityProduct.builder()
-                        .branch(user.getBranch())
+                        .branch(branchCurrent)
                         .product(product)
                         .quantity(quantity)
                         .build();
@@ -131,6 +118,15 @@ public class ProductController {
             }
         }
         return "redirect:/products/list";
+    }
+
+    @RequestMapping(value = "/image/{image_id}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getImage(@PathVariable("image_id") String id) throws IOException {
+
+        byte[] imageContent = productService.findById(id).getImage();
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+        return new ResponseEntity<byte[]>(imageContent, headers, HttpStatus.OK);
     }
 
     @GetMapping(value = "/edit/{id}")
@@ -155,7 +151,6 @@ public class ProductController {
                        @RequestParam(name = "description") String description) throws IOException {
         //save barcode
         BarcodeUtil.generateCodeBarcode(barCode, name);
-
         Brand brand_org = brandService.findByName(brand);
 
         Product product = productService.findById(id);
@@ -165,12 +160,18 @@ public class ProductController {
         product.setDescription(description);
         product.setBarCode(barCode);
         product.setBrand(brand_org);
-        product.setImage(ImageUtil.convertToBase64(image));
+        if (!image.isEmpty()) {
+            product.setImage(image.getBytes());
+        }
 
         //save barcode
         BarcodeUtil.generateCodeBarcode(barCode, name);
-
         productService.saveOrUpdate(product);
+
+        //quantity
+        QuantityProduct quantityProduct = quantityProductService.findByBranchAndProduct(userService.getCurrentUser().getBranch(), product);
+        quantityProduct.setQuantity(quantity);
+        quantityProductService.saveOrUpdate(quantityProduct);
         return "redirect:/products/list";
     }
 
@@ -179,7 +180,4 @@ public class ProductController {
         productService.deleteById(id);
         return "redirect:/products/list";
     }
-
-
-
 }

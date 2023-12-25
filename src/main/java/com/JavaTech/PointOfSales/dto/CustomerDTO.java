@@ -1,10 +1,10 @@
 package com.JavaTech.PointOfSales.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-        import lombok.*;
+import lombok.*;
 
-        import java.util.ArrayList;
-        import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter

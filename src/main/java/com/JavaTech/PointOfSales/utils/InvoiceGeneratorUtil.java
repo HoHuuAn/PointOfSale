@@ -31,43 +31,22 @@ public class InvoiceGeneratorUtil {
 //        Generate();
     }
 
-    static Cell getHeaderTextCell(String textValue){
-        return new Cell().add(textValue).setBold().setBorder(com.itextpdf.layout.border.Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT);
-    }
-    static Cell getHeaderTextCellValue(String textValue){
-        return new Cell().add(textValue).setBorder(com.itextpdf.layout.border.Border.NO_BORDER).setTextAlignment(TextAlignment.LEFT);
-    }
-
-    static Cell getBillingandShippingCell(String textValue){
-        return new Cell().add(textValue).setFontSize(12f).setBold().setBorder(com.itextpdf.layout.border.Border.NO_BORDER).setTextAlignment(TextAlignment.LEFT);
-    }
-
-    static Cell getCell10Left(String textValue, Boolean isBold){
-        Cell myCell = new Cell().add(textValue).setFontSize(10f).setBorder(com.itextpdf.layout.border.Border.NO_BORDER).setTextAlignment(TextAlignment.LEFT);
-        return isBold ? myCell.setBold() : myCell;
-    }
     public static ByteArrayOutputStream  Generate(CustomerDTO customerDTO, OrderProduct orderProduct) throws FileNotFoundException, MalformedURLException {
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-
-        String imagePath = "src/main/resources/static/assets/logo.png";
         PdfWriter pdfWriter = new PdfWriter(outputStream);
         PdfDocument pdfDocument = new PdfDocument(pdfWriter);
         pdfDocument.setDefaultPageSize(PageSize.A4);
+
         Document document = new Document(pdfDocument);
 
-
-
-
-        float x = pdfDocument.getDefaultPageSize().getWidth()/2;
-        float y = pdfDocument.getDefaultPageSize().getHeight()/2;
-
+        String imagePath = "src/main/resources/static/assets/logo.png";
         ImageData imageData = ImageDataFactory.create(imagePath);
         Image image = new Image(imageData);
 
-
-
+        float x = pdfDocument.getDefaultPageSize().getWidth()/2;
+        float y = pdfDocument.getDefaultPageSize().getHeight()/2;
         image.setFixedPosition(x,y);
         image.setOpacity(0.1f);
         document.add(image);
@@ -77,10 +56,9 @@ public class InvoiceGeneratorUtil {
         float twocol=285f;
         float twocol150=twocol+150f;
         float[] twocolumnWidth = {twocol150, twocol};
-
-        float[] fullWidth = {threecol*3};
         float[] threecolumnWidth = {threecol, threecol, threecol};
         float[] fourcolumnWidth = {fourcol, fourcol, fourcol, fourcol};
+        float[] fullWidth = {threecol*3};
         Paragraph onesp = new Paragraph("\n");
 
         Table table = new Table(twocolumnWidth);
@@ -207,5 +185,19 @@ public class InvoiceGeneratorUtil {
         return outputStream;
     }
 
+    static Cell getHeaderTextCell(String textValue){
+        return new Cell().add(textValue).setBold().setBorder(com.itextpdf.layout.border.Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT);
+    }
+    static Cell getHeaderTextCellValue(String textValue){
+        return new Cell().add(textValue).setBorder(com.itextpdf.layout.border.Border.NO_BORDER).setTextAlignment(TextAlignment.LEFT);
+    }
 
+    static Cell getBillingandShippingCell(String textValue){
+        return new Cell().add(textValue).setFontSize(12f).setBold().setBorder(com.itextpdf.layout.border.Border.NO_BORDER).setTextAlignment(TextAlignment.LEFT);
+    }
+
+    static Cell getCell10Left(String textValue, Boolean isBold){
+        Cell myCell = new Cell().add(textValue).setFontSize(10f).setBorder(com.itextpdf.layout.border.Border.NO_BORDER).setTextAlignment(TextAlignment.LEFT);
+        return isBold ? myCell.setBold() : myCell;
+    }
 }

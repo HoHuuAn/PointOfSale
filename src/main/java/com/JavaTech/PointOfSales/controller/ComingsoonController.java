@@ -7,5 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping(value = "")
 public class ComingsoonController {
-
-    
+    @GetMapping(value = "/comingsoon")
+    public String index(){
+        return "/comingsoon/pages-comingsoon";
+    }
+}

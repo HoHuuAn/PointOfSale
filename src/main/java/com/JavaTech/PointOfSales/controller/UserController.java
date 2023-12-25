@@ -1,5 +1,6 @@
 package com.JavaTech.PointOfSales.controller;
 
+import com.JavaTech.PointOfSales.utils.FileUploadUtil;
 import com.JavaTech.PointOfSales.model.*;
 import com.JavaTech.PointOfSales.repository.ConfirmationTokenRepository;
 import com.JavaTech.PointOfSales.repository.RoleRepository;
@@ -72,24 +73,7 @@ public class UserController {
                                 @RequestParam("username") String username,
                                 @RequestParam("password") String password,
                                 @RequestParam("active") String active,
-                                @RequestParam("role") String role,
-                                @RequestParam("sendEmail") boolean sendEmail) throws IOException {
-
-        //avatar
-//        String fileName;
-//        if (avatar != null && !avatar.isEmpty()) {
-//            fileName = fullName.trim()+".jpg";
-//            FileUploadUtil.saveFile(fileName, avatar);
-//        } else {
-//            String defaultImageFilePath = "static/assets/images/user/01.jpg";
-//            ClassPathResource resource = new ClassPathResource(defaultImageFilePath);
-//            byte[] defaultImageBytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
-//
-//            MultipartFile defaultImageFile = new MockMultipartFile("default-avatar.png", defaultImageBytes);
-//            fileName = fullName.trim()+".jpg";
-//
-//            FileUploadUtil.saveFile(fileName, defaultImageFile);
-//        }
+                                @RequestParam("role") String role) throws IOException {
 
         if(avatar == null || !avatar.isEmpty()){
             String defaultImageFilePath = "static/assets/images/user/01.jpg";
@@ -126,13 +110,11 @@ public class UserController {
                 .branch(branch)
                 .password(passwordEncoder.encode(password))
                 .activated(Objects.equals(active, "Active"))
-                .roles(roles)
-                .build();
+                .roles(roles).build();
         userService.saveOrUpdate(user);
 
         //send
         sendMail(user);
-
         return "redirect:/user/list";
     }
 
@@ -235,7 +217,7 @@ public class UserController {
         User user = userRepository.getUserByUsername(username).orElseThrow();
         user.setPassword(passwordEncoder.encode(password));
         userService.saveOrUpdate(user);
-        return "redirect:/user/profile/" + user.getUsername();
+        return "redirect:/user/profile";
     }
 
     @PostMapping("/changelock/{username}")

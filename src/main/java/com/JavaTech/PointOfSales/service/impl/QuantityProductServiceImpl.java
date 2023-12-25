@@ -23,4 +23,9 @@ public class QuantityProductServiceImpl implements QuantityProductService {
     public QuantityProduct findByBranchAndProduct(Branch branch, Product product) {
         return quantityProductRepository.findQuantityProductByBranchAndProduct(branch, product);
     }
+
+    @Override
+    public int sumQuantityByBranch(Branch branch) {
+        return quantityProductRepository.sumQuantityByBranch(branch);
+    }
 }

@@ -1,7 +1,6 @@
 package com.JavaTech.PointOfSales.controller;
 
 
-import com.JavaTech.PointOfSales.security.service.*;
 import com.JavaTech.PointOfSales.utils.InvoiceGeneratorUtil;
 import com.JavaTech.PointOfSales.dto.CustomerDTO;
 import com.JavaTech.PointOfSales.dto.OrderProductDTO;
@@ -14,7 +13,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +23,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Controller
 @RequestMapping(value = "/sales")
@@ -52,15 +49,7 @@ public class SaleController {
 
     @GetMapping(value = "/sales-page")
     public String viewOrder(Model model){
-        List<ProductDTO> productDTOList = productService.listAll().stream()
-                .map(product -> {
-                    ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
-                    QuantityProduct quantityProduct = findByProduct(product);
-                    productDTO.setQuantityOfBranch(quantityProduct.getQuantity());
-                    return productDTO;
-                })
-                .collect(Collectors.toList());
-        model.addAttribute("listProducts", productDTOList);
+        model.addAttribute("listProducts", productService.listAllDTO());
         return "/sales/page-sale";
     }
 
@@ -92,9 +81,13 @@ public class SaleController {
             //get origin product
             Product product = productService.findProductByBarCode(productDTO.getBarCode());
 
+
             //subtract quantity and save into database
             QuantityProduct quantityProduct = findByProduct(product);
             quantityProduct.setQuantity(quantityProduct.getQuantity() - quantity);
+
+            //total sales
+            product.setTotalSales(product.getTotalSales() + quantityProduct.getQuantity());
             productService.saveOrUpdate(product);
 
             //handle order
@@ -108,23 +101,14 @@ public class SaleController {
             orderDetailService.saveOrUpdate(orderDetail);
             orderProduct.getOrderItems().add(orderDetail);
         }
-        orderProduct.setBranch(getCurrentUser().getBranch());
+        orderProduct.setBranch(userService.getCurrentUser().getBranch());
         orderProductService.saveOrUpdate(orderProduct);
 
         return ResponseEntity.ok("/sales/page-checkout?id=" + orderProduct.getId());
     }
 
     public QuantityProduct findByProduct(Product product){
-        return quantityProductService.findByBranchAndProduct(getCurrentUser().getBranch(), product);
-    }
-
-    public User getCurrentUser(){
-        Optional<User> info = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        User user = null;
-        if(info.isPresent()){
-            user = info.get();
-        }
-        return user;
+        return quantityProductService.findByBranchAndProduct(userService.getCurrentUser().getBranch(), product);
     }
 
     @GetMapping(value = "/page-checkout")
@@ -147,7 +131,6 @@ public class SaleController {
 
         Path uploadPath = Paths.get("./src/main/resources/static/invoice/");
         String path = uploadPath.resolve(orderProduct.getId()+".pdf").toString();
-
 
         //save invoice
         FileOutputStream fileOutputStream = new FileOutputStream(path);

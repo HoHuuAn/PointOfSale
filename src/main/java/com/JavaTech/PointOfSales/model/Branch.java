@@ -15,12 +15,13 @@ import java.util.List;
 @Builder
 @Data
 public class Branch {
+    @Id
+    @Column(name = "branch_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-
-    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private List<QuantityProduct> quantityProducts;
-
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "address")
     private String address;
@@ -33,15 +34,7 @@ public class Branch {
     @JsonManagedReference
     private List<User> users;
 
-
-
-    @Id
-    @Column(name = "branch_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "name")
-    private String name;
-
-
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<QuantityProduct> quantityProducts;
 }

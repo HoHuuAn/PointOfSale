@@ -15,9 +15,6 @@ import java.util.*;
 @RequestMapping(value = "/customers")
 public class CustomerController {
 
-
-
-
     @Autowired
     private CustomerService customerService;
 
@@ -33,7 +30,6 @@ public class CustomerController {
     @ResponseBody
     public ResponseEntity<?> findByPhone(@RequestParam("phone") String phone) {
         Customer customer = customerService.findByPhone(phone);
-        System.out.println(customer);
         CustomerDTO customerDTO = modelMapper.map(customer, CustomerDTO.class);
         if (customer != null) {
             Map<String, Object> response = new HashMap<>();
@@ -55,6 +51,10 @@ public class CustomerController {
                     .phone(phone)
                     .name(name)
                     .address(address).build());
+        }else{
+            customer.setName(name);
+            customer.setAddress(address);
+            customerService.saveOrUpdate(customer);
         }
         CustomerDTO customerDTO = modelMapper.map(customerService.findByPhone(phone), CustomerDTO.class);
         Map<String, Object> response = new HashMap<>();
