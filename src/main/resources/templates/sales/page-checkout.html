@@ -141,7 +141,7 @@
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-sm-6">
-                                            <button type="button" id="printButton" class="btn btn-primary btn-block">Print Invoice</button>
+                                            <button type="button" id="printButton" class="btn btn-danger btn-block">Print Invoice</button>
                                         </div>
                                         <div class="col-sm-6">
                                             <form action="" method="get">
@@ -220,7 +220,7 @@
                                                                 id="btn-reset-customer">Reset</button>
                                                         <button type="submit"
                                                                 class="btn btn-primary btn-enter-customer"
-                                                                id="btn-enter-customer">Close</button>
+                                                                id="btn-enter-customer">Add</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -630,6 +630,7 @@
     //     })
     // })
     function completeOrder(){
+        printInvoice();
         localStorage.clear();
         window.location.href = '/sales/sales-page';
     }
