@@ -53,10 +53,11 @@ public class HomeController {
         Map<String, Long> sumByMonth = orderProductService.getSumTotalAmountByMonth(user.getBranch());
         List<String> months = new ArrayList<>();
         List<Long> amounts = new ArrayList<>();
-
+        sumByMonth.remove(sumByMonth.keySet().iterator().next());
         for (Map.Entry<String, Long> entry : sumByMonth.entrySet()) {
             String month = entry.getKey();
             Long sum = entry.getValue();
+
             months.add(month);
             amounts.add(sum);
         }

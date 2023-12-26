@@ -60,7 +60,7 @@ public class OrderProductServiceImpl implements OrderProductService {
         Calendar calendar = Calendar.getInstance();
         Date endDate = calendar.getTime();
 
-        calendar.add(Calendar.MONTH, -11);
+        calendar.add(Calendar.MONTH, -12);
         Date startDate = calendar.getTime();
 
         List<OrderProduct> orderProducts = orderProductRepository.findByCreatedAtBetweenAndBranch(startDate, endDate, branch);
@@ -69,7 +69,7 @@ public class OrderProductServiceImpl implements OrderProductService {
         calendar.setTime(startDate);
         while (calendar.getTime().before(endDate) || calendar.getTime().equals(endDate)) {
             int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH) + 1; // Add 1 to align with desired month representation
+            int month = calendar.get(Calendar.MONTH) + 1;
             String key = String.format("%04d-%02d", year, month);
             sumByMonth.put(key, 0L);
             calendar.add(Calendar.MONTH, 1);

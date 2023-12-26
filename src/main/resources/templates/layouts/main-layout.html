@@ -831,20 +831,20 @@
                 var totalQuantity = order.orderItems.reduce((acc, item) => acc + item.quantity, 0);
 
                 newRow.innerHTML = `
-            <td>${order.nameOfCustomer}</td>
-            <td>${order.totalAmount}</td>
-            <td>${order.cash}</td>
-            <td>${order.cash - order.totalAmount}</td>
-            <td>${formattedDate}</td>
-            <td>${totalQuantity}</td>
-            <td>
-                <div class="d-flex align-items-center list-action">
-                    <button type="button" class="btn btn-primary mt-2" data-toggle="modal" data-target="#modal-${order.id}">
-                        <i class="ri-eye-line mr-0"></i>
-                    </button>
-                </div>
-            </td>
-        `;
+                                        <td>${order.nameOfCustomer}</td>
+                                        <td>${order.totalAmount}</td>
+                                        <td>${order.cash}</td>
+                                        <td>${(order.cash!=0)?(order.cash - order.totalAmount):0}</td>
+                                        <td>${formattedDate}</td>
+                                        <td>${totalQuantity}</td>
+                                        <td>
+                                            <div class="d-flex align-items-center list-action">
+                                                <button type="button" class="btn btn-primary mt-2" data-toggle="modal" data-target="#modal-${order.id}">
+                                                    <i class="ri-eye-line mr-0"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    `;
 
                 tableBody.appendChild(newRow);
 
@@ -855,18 +855,17 @@
                 order.orderItems.forEach((item) => {
                     var row = document.createElement('tr');
                     row.innerHTML = `
-                <td>${item.id}</td>
-                <td>
-                    <div class="d-flex align-items-center">
-                        <img src="data:image/png;base64,${item.product.image}" class="img-fluid rounded avatar-50 mr-3" alt="image">
-                        <div>${item.product.name}</div>
-                    </div>
-                </td>
-                <td>${item.product.retailPrice}</td>
-                <td>${item.quantity}</td>
-                <td>${item.quantity * item.product.retailPrice}</td>
-            `;
-
+                                        <td>${item.id}</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="data:image/png;base64,${item.product.image}" class="img-fluid rounded avatar-50 mr-3" alt="image">
+                                                <div>${item.product.name}</div>
+                                            </div>
+                                        </td>
+                                        <td>${item.product.retailPrice}</td>
+                                        <td>${item.quantity}</td>
+                                        <td>${item.quantity * item.product.retailPrice}</td>
+                                    `;
                     modalTableBody.appendChild(row);
                 });
 

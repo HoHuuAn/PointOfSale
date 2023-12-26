@@ -392,6 +392,7 @@
                 xhr.setRequestHeader(header, token);
             },
             success: function (data) {
+                console.log(data)
                 localStorage.setItem('data', JSON.stringify(data));
                 displayCustomerInfo(data)
             },
@@ -630,9 +631,43 @@
     //     })
     // })
     function completeOrder(){
-        printInvoice();
-        localStorage.clear();
-        window.location.href = '/sales/sales-page';
+        var customerSession = localStorage.getItem('data');
+
+        let idValue =  window.location.href.split('?id=')[1];
+        var cash = $('#cash-by-customer').val()
+        if (customerSession !== null) {
+
+            var customer = JSON.parse(customerSession);
+
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+
+            var data = {
+                idValue: idValue,
+                cash: cash,
+                customer: customer.customer
+            };
+            $.ajax({
+                type: 'POST',
+                url: '/sales/complete-order',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: function(pdfData) {
+                    localStorage.clear();
+                    window.location.href = '/sales/sales-page';
+                },
+                error: function () {
+                    console.log("Error")
+                }
+            });
+        }
+
     }
     function printInvoice() {
         var customerSession = localStorage.getItem('data');
@@ -672,6 +707,10 @@
                     document.body.appendChild(iframe);
 
                     iframe.onload = function() {
+                        window.addEventListener('afterprint', function() {
+                            window.location.href = '/sales/sales-page';
+                        });
+
                         iframe.contentWindow.print();
                     };
                 },
