@@ -42,6 +42,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/user-photos/**").permitAll()
                                 .requestMatchers("/customers/**").permitAll()
                                 .requestMatchers("/user/confirm-account").permitAll()
+                                .requestMatchers("/user/list" , "/user/add").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/api/test/admin").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/api/test/user").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
                                 .anyRequest().authenticated())
