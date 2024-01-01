@@ -13,7 +13,7 @@ public interface ProductService {
 
     List<ProductDTO> listAllDTO();
 
-    void deleteById(String id);
+    boolean deleteById(String id);
 
     void deleteByProduct(Product product);
 

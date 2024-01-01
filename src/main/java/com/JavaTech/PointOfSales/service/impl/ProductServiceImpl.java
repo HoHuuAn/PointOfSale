@@ -1,10 +1,12 @@
 package com.JavaTech.PointOfSales.service.impl;
 
 import com.JavaTech.PointOfSales.dto.ProductDTO;
+import com.JavaTech.PointOfSales.model.OrderDetail;
 import com.JavaTech.PointOfSales.model.Product;
 import com.JavaTech.PointOfSales.model.QuantityProduct;
 import com.JavaTech.PointOfSales.model.User;
 import com.JavaTech.PointOfSales.repository.ProductRepository;
+import com.JavaTech.PointOfSales.service.OrderDetailService;
 import com.JavaTech.PointOfSales.service.ProductService;
 import com.JavaTech.PointOfSales.service.QuantityProductService;
 import com.JavaTech.PointOfSales.service.UserService;
@@ -31,6 +33,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private QuantityProductService quantityProductService;
+
+    @Autowired
+    private OrderDetailService orderDetailService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -65,8 +70,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteById(String id) {
-        productRepository.deleteById(id);
+    public boolean deleteById(String id) {
+        Product product = findById(id);
+        if (orderDetailService.findByProduct(product).isEmpty()){
+            productRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     @Override

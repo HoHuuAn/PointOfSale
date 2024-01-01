@@ -22,10 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.beans.factory.support.InstanceSupplier.using;
@@ -175,9 +172,15 @@ public class ProductController {
         return "redirect:/products/list";
     }
 
-    @GetMapping(value = "/delete/{id}")
-    public String delete(@PathVariable(name = "id") String id){
-        productService.deleteById(id);
-        return "redirect:/products/list";
+    @ResponseBody
+    @PostMapping (value = "/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable(name = "id") String id){
+        if(productService.deleteById(id)){
+            Map<String, Object> response = new HashMap<>();
+            return ResponseEntity.ok(response);
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

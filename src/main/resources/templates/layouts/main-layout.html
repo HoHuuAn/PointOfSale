@@ -28,6 +28,9 @@
 
     <!-- STOMP -->
     <script type="text/javascript" th:src="@{https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js}"></script>
+
+    <link rel="stylesheet" th:href="@{/assets/css/toast.css}">
+    <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css}"/>
 </head>
 
 <body class="  ">
@@ -39,6 +42,7 @@
     <!-- loader END -->
     <!-- Wrapper Start -->
     <div class="wrapper">
+        <ul class="notifications"></ul>
         <div class="iq-sidebar  sidebar-default ">
             <div class="iq-sidebar-logo d-flex align-items-center justify-content-between">
                 <a href="/" class="header-logo">
@@ -657,9 +661,11 @@
     <script th:src="@{/assets/js/customizer.js}"></script>
 
     <!-- Chart Custom JavaScript -->
-
+    <script th:src="@{/assets/js/toast.js}"></script>
     <!-- app JavaScript -->
     <script th:src="@{/assets/js/app.js}"></script>
+
+
 
     <!-- report -->
     <script th:src="@{/assets/js/daterangepicker.js}"></script>
@@ -1062,9 +1068,8 @@
 
 
 
-
+        // test Websocket
         var stompClient = null;
-
         function connect() {
             var socket = new SockJS('http://localhost:8080/ws');
             stompClient = Stomp.over(socket);
@@ -1072,22 +1077,42 @@
                 stompClient.subscribe('/topic/quantity-updates', function (response) {
                     var body = JSON.parse(response.body);
                     console.log(body)
-                    // $('#total-sales').html('$' + body.totalAmount);
-                    // $('#product-sold').html(body.totalProduct);
-                    // $('#orders-sold').html(body.orderList.length);
-                    // $('#profit').html('$' + body.profit);
-                    // showOrder(body.orderList);
-                    // showProduct(body.productList);
                 });
             });
         }
-
         connect();
         function disconnect() {
             if (stompClient !== null) {
                 stompClient.disconnect();
             }
         }
+
+
+    </script>
+
+    <script type="text/javascript">
+        function deleteById(id){
+            console.log('Deleting product with ID:', id);
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+            $.ajax({
+                url: '/products/delete/' + id,
+                method: 'POST',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                success: function(response) {
+                    $('[data-original-title="Delete"]').tooltip('hide');
+                    $('#' + id).remove();
+                    createToast("success", "Product with id = " + id + " was deleted successfully ")
+                },
+                error: function(xhr, status, error) {
+                    createToast("error", "Product with id = " + id + " was failed to delete ")
+                }
+            });
+        }
+
+
     </script>
 </body>
 </html>

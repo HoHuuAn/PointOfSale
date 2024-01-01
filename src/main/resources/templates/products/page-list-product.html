@@ -40,7 +40,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="ligth-body">
-                                    <tr th:each="product : ${listProducts}">
+                                    <tr th:each="product : ${listProducts}" th:id="${product.getId()}">
                                         <td>
                                             <div class="checkbox d-inline-block">
                                                 <input type="checkbox" class="checkbox-input" th:id="${product.getId()}">
@@ -68,7 +68,8 @@
                                                    th:href="${'/products/edit/' + product.getId()}"><i class="ri-pencil-line mr-0"></i></a>
                                                 <a class="badge bg-warning mr-2" data-toggle="tooltip"
                                                     data-placement="top" title="" data-original-title="Delete"
-                                                    th:href="${'/products/delete/' + product.getId()}"><i class="ri-delete-bin-line mr-0"></i></a>
+                                                   th:data-id="${product.getId()}" onclick="deleteById(this.getAttribute('data-id')); return false;"
+                                                ><i class="ri-delete-bin-line mr-0"></i></a>
                                             </div>
                                         </td>
                                     </tr>
