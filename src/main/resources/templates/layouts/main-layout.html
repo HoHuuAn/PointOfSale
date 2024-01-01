@@ -23,6 +23,11 @@
     <script type="text/javascript" th:src="@{https://cdn.jsdelivr.net/momentjs/latest/moment.min.js}"></script>
     <script type="text/javascript" th:src="@{https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js}"></script>
     <link rel="stylesheet" type="text/css" th:href="@{https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css}" />
+    <!-- SockJS -->
+    <script type="text/javascript" th:src="@{https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js}"></script>
+
+    <!-- STOMP -->
+    <script type="text/javascript" th:src="@{https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js}"></script>
 </head>
 
 <body class="  ">
@@ -87,7 +92,7 @@
                                         <i class="las la-minus"></i><span>List Product</span>
                                     </a>
                                 </li>
-                                <li class="">
+                                <li sec:authorize="hasRole('ROLE_ADMIN')" class="">
                                     <a href="/products/add">
                                         <i class="las la-minus"></i><span>Add Product</span>
                                     </a>
@@ -119,7 +124,7 @@
                                     </a>
                                 </li>
                                 <li class="">
-                                    <a th:href="@{/brands/add}">
+                                    <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/brands/add}">
                                         <i class="las la-minus"></i><span>Add Brand</span>
                                     </a>
                                 </li>
@@ -220,7 +225,7 @@
 <!--                                </li>-->
 <!--                            </ul>-->
 <!--                        </li>-->
-                        <li sec:authorize="hasRole('ROLE_ADMIN')" class=" ">
+                        <li class=" ">
                             <a href="#people" class="collapsed" data-toggle="collapse" aria-expanded="false">
                                 <svg class="svg-icon" id="p-dash8" width="20" height="20"
                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
@@ -241,22 +246,22 @@
                                 </svg>
                             </a>
                             <ul id="people" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-<!--                                <li class="">-->
-<!--                                    <a th:href="@{/backend/page-list-customers.html}">-->
-<!--                                        <i class="las la-minus"></i><span>Customers</span>-->
-<!--                                    </a>-->
-<!--                                </li>-->
+                                <li class="">
+                                    <a th:href="@{/customers/list}">
+                                        <i class="las la-minus"></i><span>Customers</span>
+                                    </a>
+                                </li>
 <!--                                <li class="">-->
 <!--                                    <a th:href="@{/backend/page-add-customers.html}">-->
 <!--                                        <i class="las la-minus"></i><span>Add Customers</span>-->
 <!--                                    </a>-->
 <!--                                </li>-->
-                                <li class="">
+                                <li sec:authorize="hasRole('ROLE_ADMIN')" class="">
                                     <a th:href="@{/user/list}">
                                         <i class="las la-minus"></i><span>Users</span>
                                     </a>
                                 </li>
-                                <li class="">
+                                <li sec:authorize="hasRole('ROLE_ADMIN')" class="">
                                     <a th:href="@{/user/add}">
                                         <i class="las la-minus"></i><span>Add Users</span>
                                     </a>
@@ -275,12 +280,20 @@
                         </li>
                         <li class="">
                             <a th:href="@{/sales/sales-page}">
-                                <svg class="svg-icon" id="p-dash14" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="3" y="3" width="7" height="7"></rect>
-                                    <rect x="14" y="3" width="7" height="7"></rect>
-                                    <rect x="14" y="14" width="7" height="7"></rect>
-                                    <rect x="3" y="14" width="7" height="7"></rect>
+                                <svg class="svg-icon" id="p-dash4" width="20" height="20"
+                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                                    <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
                                 </svg>
+
+<!--                                <svg class="svg-icon" id="p-dash14" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">-->
+<!--                                    <rect x="3" y="3" width="7" height="7"></rect>-->
+<!--                                    <rect x="14" y="3" width="7" height="7"></rect>-->
+<!--                                    <rect x="14" y="14" width="7" height="7"></rect>-->
+<!--                                    <rect x="3" y="14" width="7" height="7"></rect>-->
+<!--                                </svg>-->
                                 <span class="ml-4">Sales</span>
                             </a>
                         </li>
@@ -1047,6 +1060,34 @@
         const sumCustomer = [[${sumCustomer}]];
         setCircleProgress(sumCustomerBuyTwoTimes, sumCustomer, 'circleLoyalCustomer');
 
+
+
+
+        var stompClient = null;
+
+        function connect() {
+            var socket = new SockJS('http://localhost:8080/ws');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                stompClient.subscribe('/topic/quantity-updates', function (response) {
+                    var body = JSON.parse(response.body);
+                    console.log(body)
+                    // $('#total-sales').html('$' + body.totalAmount);
+                    // $('#product-sold').html(body.totalProduct);
+                    // $('#orders-sold').html(body.orderList.length);
+                    // $('#profit').html('$' + body.profit);
+                    // showOrder(body.orderList);
+                    // showProduct(body.productList);
+                });
+            });
+        }
+
+        connect();
+        function disconnect() {
+            if (stompClient !== null) {
+                stompClient.disconnect();
+            }
+        }
     </script>
 </body>
 </html>

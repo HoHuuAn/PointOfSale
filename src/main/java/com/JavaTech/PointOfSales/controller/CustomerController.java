@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -22,7 +23,8 @@ public class CustomerController {
     private ModelMapper modelMapper;
 
     @GetMapping(value = "/list")
-    public String listCustomer(){
+    public String listCustomer(Model model){
+        model.addAttribute("listCustomer",customerService.listAll());
         return "/customers/page-list-customers";
     }
 

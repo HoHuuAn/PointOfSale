@@ -16,7 +16,7 @@
                                 <p class="mb-0">The product list effectively dictates product presentation and provides
                                     space<br> to list your products and offering in the most appealing way.</p>
                             </div>
-                            <a th:href="@{/products/add}" class="btn btn-primary add-list"><i
+                            <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/products/add}" class="btn btn-primary add-list"><i
                                     class="las la-plus mr-3"></i>Add Product</a>
                         </div>
                     </div>
@@ -36,7 +36,7 @@
                                         <th>Brand</th>
                                         <th>Price</th>
                                         <th>Quantity</th>
-                                        <th>Action</th>
+                                        <th sec:authorize="hasRole('ROLE_ADMIN')" >Action</th>
                                     </tr>
                                 </thead>
                                 <tbody class="ligth-body">

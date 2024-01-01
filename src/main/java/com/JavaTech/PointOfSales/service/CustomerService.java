@@ -1,5 +1,6 @@
 package com.JavaTech.PointOfSales.service;
 
+import com.JavaTech.PointOfSales.dto.CustomerDTO;
 import com.JavaTech.PointOfSales.model.Customer;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface CustomerService {
     Customer findByPhone(String phone);
 
     List<Customer> listAll();
+
+    List<CustomerDTO> listAllDTO();
 }

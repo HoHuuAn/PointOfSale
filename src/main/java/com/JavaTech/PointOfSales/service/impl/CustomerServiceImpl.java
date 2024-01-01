@@ -1,5 +1,6 @@
 package com.JavaTech.PointOfSales.service.impl;
 
+import com.JavaTech.PointOfSales.dto.CustomerDTO;
 import com.JavaTech.PointOfSales.model.Customer;
 import com.JavaTech.PointOfSales.repository.CustomerRepository;
 import com.JavaTech.PointOfSales.service.CustomerService;
@@ -33,5 +34,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<Customer> listAll() {
         return customerRepository.findAll();
+    }
+
+    @Override
+    public List<CustomerDTO> listAllDTO() {
+        return null;
     }
 }

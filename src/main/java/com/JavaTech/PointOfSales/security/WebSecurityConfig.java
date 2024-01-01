@@ -7,9 +7,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 
 @Configuration
@@ -36,13 +44,32 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .cors(cors -> cors
+                        .configurationSource(request -> {
+                            CorsConfiguration config = new CorsConfiguration();
+                            config.setAllowedOrigins(List.of("http://localhost:8081"));
+                            config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                            config.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
+                            config.setAllowCredentials(true);
+
+                            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                            source.registerCorsConfiguration("/**", config);
+
+                            return config;
+                        })
+                )
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/static/**").permitAll()
-                                .requestMatchers("/assets/**").permitAll()
-                                .requestMatchers("/user-photos/**").permitAll()
-                                .requestMatchers("/customers/**").permitAll()
-                                .requestMatchers("/user/confirm-account").permitAll()
-                                .requestMatchers("/user/list" , "/user/add").hasAuthority("ROLE_ADMIN")
+                        auth.requestMatchers("/static/**",
+                                        "/assets/**",
+                                        "/user-photos/**",
+                                        "/customers/**",
+                                        "/ws/**",
+                                        "/user/confirm-account").permitAll()
+                                .requestMatchers("/user/list" ,
+                                        "/user/add",
+                                        "/brands/add",
+                                        "/products/add",
+                                        "/products/edit/**").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/api/test/admin").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/api/test/user").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
                                 .anyRequest().authenticated())
