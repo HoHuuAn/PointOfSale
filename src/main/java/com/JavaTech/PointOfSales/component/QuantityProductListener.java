@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import jakarta.persistence.PostLoad;
 import jakarta.persistence.PostUpdate;
 import com.google.gson.JsonObject;
-import jakarta.persistence.PreUpdate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +16,6 @@ public class QuantityProductListener {
 
     private final SimpMessagingTemplate messagingTemplate;
     private JsonObject jsonResponse = new JsonObject();
-    private Map<Long, Integer> oldQuantities = new HashMap<>();
     public QuantityProductListener(SimpMessagingTemplate messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
         this.jsonResponse = new JsonObject();
