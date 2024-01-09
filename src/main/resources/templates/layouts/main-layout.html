@@ -260,12 +260,12 @@
 <!--                                        <i class="las la-minus"></i><span>Add Customers</span>-->
 <!--                                    </a>-->
 <!--                                </li>-->
-                                <li sec:authorize="hasRole('ROLE_ADMIN')" class="">
+                                <li sec:authorize="hasAuthority('ROLE_ADMIN')" class="">
                                     <a th:href="@{/user/list}">
                                         <i class="las la-minus"></i><span>Users</span>
                                     </a>
                                 </li>
-                                <li sec:authorize="hasRole('ROLE_ADMIN')" class="">
+                                <li sec:authorize="hasAuthority('ROLE_ADMIN')" class="">
                                     <a th:href="@{/user/add}">
                                         <i class="las la-minus"></i><span>Add Users</span>
                                     </a>
@@ -562,8 +562,8 @@
                                 </li>
                                 <li class="nav-item nav-icon dropdown caption-content">
                                     <a href="#" class="search-toggle dropdown-toggle" id="dropdownMenuButton4"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <img th:src="@{'data:image/png;base64,'+ ${#authentication.principal.avatar}}" class="img-fluid rounded" alt="user">
+                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <img id="avatarImage" th:src="@{'data:image/jpeg;base64,' + ${#authentication.principal.avatar}}" class="img-fluid rounded" alt="user">
                                     </a>
                                     <div class="iq-sub-dropdown dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <div class="card shadow-none m-0">
@@ -571,7 +571,7 @@
                                                 <div class="media-body profile-detail text-center">
                                                     <img th:src="@{/assets/images/page-img/profile-bg.jpg}" alt="profile-bg"
                                                         class="rounded-top img-fluid mb-4">
-                                                    <img th:src="@{'data:image/png;base64,'+ ${#authentication.principal.avatar}}" alt="profile-img"
+                                                    <img th:src="@{'data:image/jpeg;base64,'+ ${#authentication.principal.avatar}}" alt="profile-img"
                                                          class="rounded profile-img img-fluid avatar-70">
                                                 </div>
                                                 <div class="p-3">
@@ -1085,31 +1085,6 @@
             if (stompClient !== null) {
                 stompClient.disconnect();
             }
-        }
-
-
-    </script>
-
-    <script type="text/javascript">
-        function deleteById(id){
-            console.log('Deleting product with ID:', id);
-            var token = $("meta[name='_csrf']").attr("content");
-            var header = $("meta[name='_csrf_header']").attr("content");
-            $.ajax({
-                url: '/products/delete/' + id,
-                method: 'POST',
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader(header, token);
-                },
-                success: function(response) {
-                    $('[data-original-title="Delete"]').tooltip('hide');
-                    $('#' + id).remove();
-                    createToast("success", "Product with id = " + id + " was deleted successfully ")
-                },
-                error: function(xhr, status, error) {
-                    createToast("error", "Product with id = " + id + " was failed to delete ")
-                }
-            });
         }
 
 

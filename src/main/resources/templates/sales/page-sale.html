@@ -536,6 +536,7 @@
         addProduct(barcode);
     });
     function addProduct(barcode) {
+        event.preventDefault();
         var token = $("meta[name='_csrf']").attr("content");
         var header = $("meta[name='_csrf_header']").attr("content");
         $.ajax({
@@ -550,7 +551,6 @@
                 var sessionData = localStorage.getItem('dataOrder');
                 var productList = [];
                 var quantityCurrent  = (typeof $(`#quantity-${data.product.name.replaceAll(' ', '-')}`).val() === 'undefined') ? 0 : $(`#quantity-${data.product.name.replaceAll(' ', '-')}`).val()
-                console.log(quantityCurrent)
                 if (data.product.quantityOfBranch - quantityCurrent > 0){
                     if (sessionData) {
                         productList = JSON.parse(sessionData);
@@ -576,7 +576,7 @@
                     updateCash()
                 }
                 else {
-                    notifyLoadProductFail(barcode, " was sold out")
+                    notifyLoadProductFail(data.product.name, " was sold out")
                 }
             },
             error: function () {
@@ -679,7 +679,7 @@
                         <div class="btn-group" role="group" aria-label="Quantity">
                             <button type="button" onclick="updateQuantity('${product.name}', -1)"
                                 class="btn btn-outline-primary decrease-btn">-</button>
-                            <input id="${inputId}" class="form-control quantity-input text-center" style="max-width: 100px;" value="${quantity}">
+                            <input disabled id="${inputId}" class="form-control quantity-input text-center" style="max-width: 100px;" value="${quantity}">
                             <button type="button" onclick="updateQuantity('${product.name}', 1)"
                                 class="btn btn-outline-primary increase-btn">+</button>
                         </div>
@@ -722,18 +722,37 @@
     function updateQuantity(productName, change) {
         const inputId = `quantity-${productName.replaceAll(' ', '-')}`;
         const quantityInput = document.getElementById(inputId);
-
-        if (quantityInput) {
+        const product = findProductByName(productName);
+        // console.log(product)
+        if(parseInt(quantityInput.value) - product.quantityOfBranch <= 0){
+            // console.log(product.quantityOfBranch)
+            notifyLoadProductFail(productName, " was sold out")
+        }
+        else if (quantityInput) {
             let currentValue = parseInt(quantityInput.value);
             let newQuantity = isNaN(currentValue) ? 1 : currentValue + change;
 
             if (newQuantity < 1) {
                 newQuantity = 1;
             }
-
             quantityInput.value = newQuantity;
             updateQuantityInSessionStorage(productName, newQuantity);
         }
+    }
+    function findProductByName(productName) {
+        var sessionData = localStorage.getItem('dataOrder');
+        if (!sessionData) {
+            return null; // Session data not found
+        }
+
+        var products = JSON.parse(sessionData);
+        for (var i = 0; i < products.length; i++) {
+            if (products[i].product.name === productName) {
+                return products[i].product;
+            }
+        }
+
+        return null; // Product not found
     }
     function updateQuantityInSessionStorage(productName, newQuantity) {
         var sessionData = localStorage.getItem('dataOrder');

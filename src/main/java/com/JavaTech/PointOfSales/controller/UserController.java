@@ -1,6 +1,7 @@
 package com.JavaTech.PointOfSales.controller;
 
-import com.JavaTech.PointOfSales.utils.FileUploadUtil;
+import com.JavaTech.PointOfSales.security.service.UserDetailsImpl;
+import org.springframework.security.access.prepost.PreAuthorize;
 import com.JavaTech.PointOfSales.model.*;
 import com.JavaTech.PointOfSales.repository.ConfirmationTokenRepository;
 import com.JavaTech.PointOfSales.repository.RoleRepository;
@@ -11,8 +12,10 @@ import com.JavaTech.PointOfSales.utils.ImageUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -202,11 +205,17 @@ public class UserController {
     }
 
     @PostMapping("/update-avatar")
+    @PreAuthorize("isAuthenticated()")
     public String updateAvatar(@RequestParam(name = "avatar") MultipartFile avatar,
-                               @RequestParam(name = "username") String username) throws IOException {
+                               @RequestParam(name = "username") String username,
+                               Authentication authentication) throws IOException {
         User user = userRepository.getUserByUsername(username).orElseThrow();
         user.setAvatar(ImageUtil.convertToBase64(avatar));
         userService.saveOrUpdate(user);
+
+        UserDetailsImpl updatedUserDetails = new UserDetailsImpl(user, user.getAvatar());
+        Authentication newAuthentication = new UsernamePasswordAuthenticationToken(updatedUserDetails, authentication.getCredentials(), authentication.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(newAuthentication);
         return "redirect:/user/profile";
     }
 
